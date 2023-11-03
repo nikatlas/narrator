@@ -1,0 +1,3 @@
+client_name,supplier_name,proposal_status,award_status,create_date,project_id,project_name,servicestandard,project_location,project_status,seniority_standard,seniority_level,rate,currency,analysis_days,concept_days,implementation_days,audit_days,total_days,proposal_id,rate_total,proposal_total,supp_perc,supp_total,man_days
+ABB Asea Brown Boveri Ltd,Simon-Kucher,submitted,2019-03-13,790,PG Pricing,"Marketing, Brands & Pricing",Sweden,completed,Partner,6,4200.0,CHF,5.0,0.0,,,5.0,44,21000.0,109704.0,,,41.0
+ABB Asea Brown Boveri Ltd,Simon-Kucher,0,submitted,2019-03-13,790,PG Pricing,"Marketing, Brands & Pricing",Sweden,completed,Director,5,3136.0,CHF,12.0,0.0,,,12.0,44,37632.0,109704.0,,,41.0

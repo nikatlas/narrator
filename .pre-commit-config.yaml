@@ -1,0 +1,81 @@
+
+default_stages: [commit, push]
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v2.5.0
+    hooks:
+      - id: check-yaml
+      - id: end-of-file-fixer
+        exclude: '^LICENSE$|snapshots'
+
+  - repo: local
+    hooks:
+      - id: pyupgrade
+        name: pyupgrade
+        entry: poetry run pyupgrade --py38-plus
+        types: [python]
+        language: system
+
+  - repo: local
+    hooks:
+      - id: isort
+        name: isort
+        entry: poetry run isort --settings-path pyproject.toml
+        types: [python]
+        language: system
+        args: []
+
+  - repo: local
+    hooks:
+      - id: black
+        name: black
+        entry: poetry run black --config pyproject.toml
+        types: [python]
+        language: system
+
+  - repo: local
+    hooks:
+      - id: flake8
+        name: flake8
+        entry: poetry run flake8 --config setup.cfg
+        types: [python]
+        language: system
+        files: narrator
+        args: []
+
+  - repo: local
+    hooks:
+      - id: pylint
+        name: pylint
+        entry: poetry run pylint narrator/ tests/ --rcfile pyproject.toml
+        language: system
+        always_run: true
+        pass_filenames: false
+
+  - repo: local
+    hooks:
+      - id: mypy
+        name: mypy
+        entry: poetry run mypy --config-file pyproject.toml ./
+        language: system
+        always_run: true
+        pass_filenames: false
+
+  - repo: local
+    hooks:
+        - id: env-to-requirements
+          name: Poetry env to requirements
+          entry: bash -c "poetry export --without-hashes --without dev -f requirements.txt | sed -E 's/(.*)==(.*) ;.*/\1==\2/' > requirements.txt" --
+          language: system
+          always_run: true
+          pass_filenames: false
+
+  - repo: local
+    hooks:
+        - id: env-to-dev-requirements
+          name: Poetry env to dev requirements
+          entry: bash -c "poetry export --without-hashes -f requirements.txt --only dev | sed -E 's/(.*)==(.*) ;.*/\1==\2/' > requirements-dev.txt" --
+          language: system
+          always_run: true
+          pass_filenames: false
