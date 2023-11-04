@@ -113,7 +113,7 @@ warn_unused_ignores = true
 [tool.pytest.ini_options]
 # https://docs.pytest.org/en/6.2.x/customize.html#pyproject-toml
 # Directories that are not visited by pytest collector:
-norecursedirs =["hooks", "*.egg", ".eggs", "dist", "build", "docs", ".tox", ".git", "__pycache__"]
+norecursedirs =["hooks", "*.egg", ".eggs", "dist", "build", "docs", ".tox", ".git", "__pycache__", "examples", "management"]
 doctest_optionflags = ["NUMBER", "NORMALIZE_WHITESPACE", "IGNORE_EXCEPTION_DETAIL"]
 DJANGO_SETTINGS_MODULE = "narrator.settings"
 filterwarnings = ["ignore::DeprecationWarning"]
@@ -142,6 +142,11 @@ addopts = [
 
 [tool.coverage.run]
 source = ["tests"]
+omit = [
+  "*/examples/*",
+  "*/management/*",
+  "*/urls.py",
+]
 
 [coverage.paths]
 source = "narrator"
