@@ -1,4 +1,4 @@
-
+![Test coverage](./assets/images/coverage.svg)
 
 ## Run Django server
 
