@@ -3,6 +3,7 @@ from os import environ, path
 from narrator.constants import DATABASE_DIR
 
 DEBUG = environ.get("DJANGO_DEBUG", False)
+ALLOWED_HOSTS = ["*"]
 
 INSTALLED_APPS = ["narrator.apps.NarratorConfig"]
 

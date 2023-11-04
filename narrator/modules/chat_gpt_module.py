@@ -33,9 +33,8 @@ class ChatGptModule(PipelineModule[Input, Output]):
         """
         Function that runs the ChatGPT module
 
-        @param context: Dict[str, Any] - it should contain company_name:str,
-        keyword:str, num_words:int, web_content:str
-        @return: output_messages: List[Dict[str, str]] - list of summaries
+        @param context: Dict[str, Any]
+        @return: output_message: str - ChatGPT response
         """
 
         if not isinstance(context.payload, dict):
