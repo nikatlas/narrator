@@ -29,14 +29,14 @@ def test_character_get_context(test_characters, test_resources):
     context = test_characters[0].get_context(test_characters[1])
 
     assert context["interactions"][0]["role"] == "assistant"
-    assert context["interactions"][0]["message"] == "Hello, how are you?"
+    assert context["interactions"][0]["content"] == "Hello, how are you?"
     assert context["interactions"][1]["role"] == "user"
-    assert context["interactions"][1]["message"] == "I'm fine, thanks."
+    assert context["interactions"][1]["content"] == "I'm fine, thanks."
     assert context["interactions"][2]["role"] == "assistant"
-    assert context["interactions"][2]["message"] == "What do you mean you are fine?"
+    assert context["interactions"][2]["content"] == "What do you mean you are fine?"
     assert len(context["interactions"]) == 3
     assert context["resources"][0]["role"] == "system"
-    assert context["resources"][0]["message"] == "A tasty burger."
+    assert context["resources"][0]["content"] == "A tasty burger."
     assert context["resources"][1]["role"] == "system"
-    assert context["resources"][1]["message"] == "A portion of fries."
+    assert context["resources"][1]["content"] == "A portion of fries."
     assert len(context["resources"]) == 2
