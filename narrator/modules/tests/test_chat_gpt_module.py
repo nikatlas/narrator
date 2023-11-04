@@ -35,3 +35,21 @@ def test_chat_gpt_module_invalid_payload():
     bad_gpt_module: ChatGptModule = ChatGptModule()
     with pytest.raises(ValueError):
         bad_gpt_module.run(context)
+
+
+@pytest.mark.skip(reason="Only for debugging the actual api call. No mocks here.")
+def test_chat_gpt_module_conversation():
+    payload = {
+        "conversation": [
+            {
+                "role": "system",
+                "content": "You are a narrator. Describe an ancient fantasy world.",
+            },
+        ]
+    }
+
+    context = PipelineContext(payload=payload)
+    context.add("temperature", 2.0)
+    gpt_module: ChatGptModule = ChatGptModule()
+    module_output = gpt_module.run(context)
+    assert module_output == "You are a robot."

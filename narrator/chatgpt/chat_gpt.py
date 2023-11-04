@@ -6,7 +6,7 @@ from openai.error import ServiceUnavailableError
 
 from narrator.constants import (
     OPEN_AI_VERSION,
-    OPENAI_API_BASE,
+    OPENAI_API_ENDPOINT,
     OPENAI_API_KEY,
     OPENAI_API_TYPE,
 )
@@ -21,10 +21,9 @@ class ChatGpt(metaclass=Singleton):
 
     @staticmethod
     def set_openai_api():
-        if OPENAI_API_TYPE == "azure":
-            openai.api_base = OPENAI_API_BASE
-            openai.api_type = OPENAI_API_TYPE
-            openai.api_version = OPEN_AI_VERSION
+        openai.api_base = OPENAI_API_ENDPOINT
+        openai.api_type = OPENAI_API_TYPE
+        openai.api_version = OPEN_AI_VERSION
         openai.api_key = OPENAI_API_KEY
 
     @staticmethod
@@ -40,20 +39,31 @@ class ChatGpt(metaclass=Singleton):
         return output_messages
 
     @staticmethod
-    def default_configuration():
+    def default_configuration(
+        model: str = "gpt-3.5-turbo",
+        temperature: float = 1.0,
+        max_tokens: int = 200,
+        top_p: float = 0.95,
+        frequency_penalty: float = 0.0,
+        presence_penalty: float = 0.0,
+    ) -> Dict[str, Any]:
         return {
-            "engine": "gpt35",
-            "temperature": 1.0,
-            "max_tokens": 200,
-            "top_p": 0.95,
-            "frequency_penalty": 0.0,
-            "presence_penalty": 0.0,
+            "model": model,
+            "temperature": temperature,
+            "max_tokens": max_tokens,
+            "top_p": top_p,
+            "frequency_penalty": frequency_penalty,
+            "presence_penalty": presence_penalty,
         }
 
     def request(self, messages: List[Dict[Any, Any]], **kwargs: Any) -> Any:
         try:
             return openai.ChatCompletion.create(
-                messages=messages, **{**self.default_configuration(), **kwargs}
+                messages=messages,
+                **{
+                    **self.default_configuration(),
+                    **kwargs,
+                },
             )
         except ServiceUnavailableError:
             return None

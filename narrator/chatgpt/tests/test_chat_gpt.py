@@ -3,6 +3,7 @@ from typing import Any, List
 from unittest.mock import patch
 
 import openai
+import pytest
 from openai.error import ServiceUnavailableError
 
 from narrator.chatgpt.chat_gpt import ChatGpt
@@ -30,7 +31,7 @@ def test_chat_gpt(mock_openai):
     gpt.request(messages, temperature=2.0)
 
     mock_openai.ChatCompletion.create.assert_called_once_with(
-        engine="gpt35",
+        model="gpt-3.5-turbo",
         messages=messages,
         temperature=2.0,
         max_tokens=200,
@@ -50,7 +51,7 @@ def test_chat_gpt_default(mock_openai):
     gpt.request(messages)
 
     mock_openai.ChatCompletion.create.assert_called_once_with(
-        engine="gpt35",
+        model="gpt-3.5-turbo",
         messages=messages,
         temperature=1.0,
         max_tokens=200,
@@ -73,7 +74,7 @@ def test_chat_gpt_service_unavailable(mock_openai):
 
 @patch("narrator.chatgpt.chat_gpt.OPENAI_API_TYPE", "azure")
 @patch("narrator.chatgpt.chat_gpt.OPENAI_API_KEY", "KEY_1")
-@patch("narrator.chatgpt.chat_gpt.OPENAI_API_BASE", "ENDPOINT")
+@patch("narrator.chatgpt.chat_gpt.OPENAI_API_ENDPOINT", "ENDPOINT")
 @patch("narrator.chatgpt.chat_gpt.OPEN_AI_VERSION", "2023-05-15")
 def test_chat_gpt_openai_vars():
     gpt = ChatGpt()
@@ -98,3 +99,14 @@ def test_output_from_gpt_response_function():
     assert gpt.get_output_from_response(dummy_response) == [
         {"role": "assistant", "content": "This is content"}
     ]
+
+
+@pytest.mark.skip(reason="Only for debugging the actual api call. No mocks here.")
+def test_chatgpt_request():
+    messages = [
+        {"role": "system", "content": "You are a helpful assistant."},
+    ]
+
+    gpt = ChatGpt()
+    message = gpt.request(messages)
+    assert message is None
