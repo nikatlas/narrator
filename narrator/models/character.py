@@ -1,4 +1,7 @@
 from django.db import models
+from django.db.models import Q
+
+from .character_interaction import CharacterInteraction
 
 
 class Character(models.Model):
@@ -20,10 +23,14 @@ class Character(models.Model):
     voice = models.CharField(max_length=255)
     is_player = models.BooleanField(default=False)
 
-    interactions = models.ManyToManyField(
-        "Character", related_name="characters", through="CharacterInteraction"
-    )
     resources = models.ManyToManyField("Resource", related_name="characters")
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def get_interactions(self, other_character):
+        """Get character interactions with a specific character."""
+        return CharacterInteraction.objects.filter(
+            Q(recipient_character=self, transmitter_character=other_character)
+            | Q(recipient_character=other_character, transmitter_character=self)
+        ).order_by("created_at")

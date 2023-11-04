@@ -16,5 +16,6 @@ class CharacterInteraction(models.Model):
     recipient_character = models.ForeignKey(
         "Character", related_name="character_receptions", on_delete=models.CASCADE
     )
+    text = models.TextField()
 
     created_at = models.DateTimeField(auto_now_add=True)
