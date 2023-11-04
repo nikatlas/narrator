@@ -2,6 +2,8 @@ databases/*
 
 .DS_Store
 
+static/
+
 # .idea files
 .idea/
 .idea/workspace.xml

@@ -1,11 +1,55 @@
 from os import environ, path
+from pathlib import Path
 
 from narrator.constants import DATABASE_DIR
 
-DEBUG = environ.get("DJANGO_DEBUG", False)
+DEBUG = environ.get("DJANGO_DEBUG", True)
 ALLOWED_HOSTS = ["*"]
 
-INSTALLED_APPS = ["narrator.apps.NarratorConfig"]
+ROOT_URLCONF = "narrator.urls"
+
+INSTALLED_APPS = [
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.humanize",
+    "django.contrib.staticfiles",
+    "django.contrib.sites",
+    "narrator.apps.NarratorConfig",
+]
+
+# Required to run admin panel
+BASE_DIR = Path(__file__).resolve().parent.parent
+DIRS = [str(BASE_DIR / "templates")]
+CONTEXT_PROCESSORS = [
+    "django.template.context_processors.request",
+    "django.template.context_processors.debug",
+    "django.contrib.auth.context_processors.auth",
+    "django.contrib.messages.context_processors.messages",
+    "django.template.context_processors.request",
+]
+TEMPLATES = [
+    {
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "APP_DIRS": True,
+        "DIRS": DIRS,
+        "OPTIONS": {"context_processors": CONTEXT_PROCESSORS, "debug": DEBUG},
+    },
+]
+MIDDLEWARE = [
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+]
+STATIC_URL = "static/"
+STATIC_ROOT = path.join(BASE_DIR, "static")
+
+SECRET_KEY = "secret"
+
+SITE_ID = 1
+LOGIN_URL = "/admin/login/"
 
 DATABASES = {
     "default": {

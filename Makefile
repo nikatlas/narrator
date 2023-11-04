@@ -32,13 +32,21 @@ pre-commit-install:
 pre-commit:
 	bash .git/hooks/pre-commit
 
+.PHONY: createtestsuperuser
+createtestsuperuser:
+	poetry run python manage.py createsuperuser --username test --email test@test.com
+
+.PHONY: collectstatic
+collectstatic:
+	poetry run python manage.py collectstatic --noinput
+
 .PHONY: migrations
 migrations:
-	poetry run python manage.py makemigrations narrator
+	poetry run python manage.py makemigrations
 
 .PHONY: migrate
 migrate:
-	poetry run python manage.py migrate narrator
+	poetry run python manage.py migrate
 
 #* Formatters
 .PHONY: codestyle
@@ -49,6 +57,10 @@ codestyle:
 
 .PHONY: formatting
 formatting: codestyle
+
+.PHONY: runserver
+runserver:
+	poetry run python manage.py runserver
 
 .PHONY: test
 test:
