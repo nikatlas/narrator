@@ -1,7 +1,7 @@
 from django.db import models
 from django.db.models import Q
 
-from ..serializers import CharacterInteractionSerializer, ResourceSerializer
+from ..chatgpt.serializers import serialize_character_interaction, serialize_resource
 from .character_interaction import CharacterInteraction
 
 
@@ -21,7 +21,7 @@ class Character(models.Model):
 
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
-    voice = models.CharField(max_length=255)
+    voice = models.CharField(max_length=255, null=True)
     is_player = models.BooleanField(default=False)
 
     resources = models.ManyToManyField("Resource", related_name="characters")
@@ -52,12 +52,10 @@ class Character(models.Model):
         resources = self.resources.all()
 
         serialized_interactions = [
-            CharacterInteractionSerializer.serialize(self, interaction)
+            serialize_character_interaction(self, interaction)
             for interaction in interactions
         ]
-        serialized_resources = [
-            ResourceSerializer.serialize(resource) for resource in resources
-        ]
+        serialized_resources = [serialize_resource(resource) for resource in resources]
 
         return {
             "interactions": serialized_interactions,

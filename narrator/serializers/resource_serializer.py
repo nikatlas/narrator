@@ -1,17 +1,11 @@
-class ResourceSerializer:
-    """Character interaction serializer."""
+from rest_framework import serializers
 
-    @staticmethod
-    def serialize(resource):
-        """Serialise a character interaction.
+from narrator.models import Resource
 
-        Args:
-            resource (Resource): The resource.
 
-        Returns:
-            dict: The serialised resource.
-        """
-        return {
-            "role": "system",
-            "content": resource.text,
-        }
+class ResourceSerializer(serializers.HyperlinkedModelSerializer):
+    """Resource serializer."""
+
+    class Meta:
+        model = Resource
+        fields = ["name", "text"]
