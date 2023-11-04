@@ -1,5 +1,8 @@
 import pytest
 
+# pylint: disable=wildcard-import, unused-wildcard-import
+from .fixtures import *  # noqa
+
 
 def pytest_collection_modifyitems(items):
     """Add django_db marker to all tests in order to use the test database."""

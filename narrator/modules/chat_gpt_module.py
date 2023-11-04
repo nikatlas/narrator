@@ -37,12 +37,8 @@ class ChatGptModule(PipelineModule[Input, Output]):
         @return: output_message: str - ChatGPT response
         """
 
-        if not isinstance(context.payload, dict):
-            raise ValueError("Payload should have been a dictionary")
-
         chat_gpt = ChatGpt()
-
-        conversation = context.search_field("conversation", [])
+        conversation = context.search_field("conversation")
 
         parameter_dict = chat_gpt.default_configuration()
         for parameter, value in parameter_dict.items():

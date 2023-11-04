@@ -17,5 +17,5 @@ class CharacterInteractionSerializer:
             "role": "user"
             if interaction.recipient_character == character
             else "assistant",
-            "message": interaction.text,
+            "content": interaction.text,
         }

@@ -13,5 +13,5 @@ class ResourceSerializer:
         """
         return {
             "role": "system",
-            "message": resource.text,
+            "content": resource.text,
         }
