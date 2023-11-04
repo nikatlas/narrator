@@ -1,7 +1,27 @@
 import pytest
 
-from narrator.models import CharacterInteraction
+from narrator.models import CharacterInteraction, Resource
 from narrator.models.character import Character
+
+
+@pytest.fixture
+def test_resources():
+    return Resource.objects.bulk_create(
+        [
+            Resource(
+                name="Burger",
+                text="A tasty burger.",
+            ),
+            Resource(
+                name="Fries",
+                text="A portion of fries.",
+            ),
+            Resource(
+                name="Cola",
+                text="A can of cola.",
+            ),
+        ]
+    )
 
 
 @pytest.fixture
@@ -95,3 +115,23 @@ def test_character_get_interactions(test_characters):
     other_interactions = other_character.get_interactions(character)
     assert other_interactions.count() == 2
     assert [i.pk for i in other_interactions] == [i.pk for i in interactions]
+
+
+def test_character_get_context(test_characters, test_resources):
+    test_characters[0].resources.add(test_resources[0])
+    test_characters[0].resources.add(test_resources[1])
+
+    context = test_characters[0].get_context(test_characters[1])
+
+    assert context["interactions"][0]["role"] == "assistant"
+    assert context["interactions"][0]["message"] == "Hello, how are you?"
+    assert context["interactions"][1]["role"] == "user"
+    assert context["interactions"][1]["message"] == "I'm fine, thanks."
+    assert context["interactions"][2]["role"] == "assistant"
+    assert context["interactions"][2]["message"] == "What do you mean you are fine?"
+    assert len(context["interactions"]) == 3
+    assert context["resources"][0]["role"] == "system"
+    assert context["resources"][0]["message"] == "A tasty burger."
+    assert context["resources"][1]["role"] == "system"
+    assert context["resources"][1]["message"] == "A portion of fries."
+    assert len(context["resources"]) == 2

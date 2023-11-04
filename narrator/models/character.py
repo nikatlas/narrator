@@ -1,6 +1,7 @@
 from django.db import models
 from django.db.models import Q
 
+from ..serializers import CharacterInteractionSerializer, ResourceSerializer
 from .character_interaction import CharacterInteraction
 
 
@@ -34,3 +35,31 @@ class Character(models.Model):
             Q(recipient_character=self, transmitter_character=other_character)
             | Q(recipient_character=other_character, transmitter_character=self)
         ).order_by("created_at")
+
+    def get_context(self, other_character):
+        """Get the context of the character.
+        This includes:
+         - previous interactions with the user
+         - resources attached to the character
+
+        @:param other_character (Character)
+
+        @:return
+            dict: The context of the character.
+        """
+
+        interactions = self.get_interactions(other_character)
+        resources = self.resources.all()
+
+        serialized_interactions = [
+            CharacterInteractionSerializer.serialize(self, interaction)
+            for interaction in interactions
+        ]
+        serialized_resources = [
+            ResourceSerializer.serialize(resource) for resource in resources
+        ]
+
+        return {
+            "interactions": serialized_interactions,
+            "resources": serialized_resources,
+        }
