@@ -2,11 +2,17 @@ from django.contrib import admin
 from django.urls import include, path
 from rest_framework import routers
 
-from narrator.views import CharacterViewSet, ResourceViewSet, UserViewSet
+from narrator.views import (
+    CharacterInteractionViewSet,
+    CharacterViewSet,
+    ResourceViewSet,
+    UserViewSet,
+)
 
 router = routers.DefaultRouter()
 router.register(r"users", UserViewSet)
 router.register(r"character", CharacterViewSet)
+router.register(r"character-interaction", CharacterInteractionViewSet)
 router.register(r"resource", ResourceViewSet)
 
 urlpatterns = [

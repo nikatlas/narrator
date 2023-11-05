@@ -3,7 +3,7 @@ from rest_framework import serializers
 from narrator.models import Character, Resource
 
 
-class ResourcesHyperlinkedRelatedField(serializers.HyperlinkedRelatedField):
+class ResourcesRelatedField(serializers.PrimaryKeyRelatedField):
     def display_value(self, instance):
         return f"{instance.id} - {instance.name}"
 
@@ -15,11 +15,26 @@ class CharacterSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Character
-        fields = ["url", "first_name", "last_name", "voice", "is_player", "resources"]
+        fields = [
+            "url",
+            "id",
+            "first_name",
+            "last_name",
+            "voice",
+            "is_player",
+            "resources",
+            "resources_url",
+        ]
 
-    resources = ResourcesHyperlinkedRelatedField(
+    id = serializers.IntegerField(read_only=True)
+    resources_url = serializers.HyperlinkedRelatedField(
         many=True,
-        queryset=Resource.objects.all(),
-        required=False,
+        read_only=True,
+        source="resources",
         view_name="resource-detail",
+    )
+    resources = ResourcesRelatedField(
+        many=True,
+        required=False,
+        queryset=Resource.objects.all(),
     )
