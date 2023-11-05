@@ -12,6 +12,10 @@ from narrator.constants import (
 )
 from narrator.utils import Singleton
 
+# TODO: Add support for the following:
+# How to use embeddings to encode information:
+# https://cookbook.openai.com/examples/question_answering_using_embeddings
+
 
 class ChatGpt(metaclass=Singleton):
     """ChatGpt communication class"""
