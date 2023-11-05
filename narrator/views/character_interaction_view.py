@@ -1,8 +1,12 @@
-from rest_framework import viewsets
-from rest_framework.decorators import action
+from django.views.decorators.csrf import csrf_exempt
+from rest_framework import status, viewsets
+from rest_framework.decorators import action, permission_classes
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
 from narrator.models import Character, CharacterInteraction
+from narrator.pipeline import PipelineContext
+from narrator.pipelines import ConversationPipeline
 from narrator.serializers import CharacterInteractionSerializer
 
 
@@ -16,6 +20,36 @@ class CharacterInteractionViewSet(viewsets.ModelViewSet):
         url_path=r"conversation/(?P<player_id>[^/]+)/(?P<npc_id>[^/]+)",
     )
     def conversation(self, request, player_id, npc_id):
+        interactions = Character.get_interactions(player_id, npc_id)
+        interactions_serialized = CharacterInteractionSerializer(
+            interactions, many=True, context={"request": request}
+        )
+        return Response(interactions_serialized.data)
+
+    @action(
+        detail=False,
+        methods=["post"],
+        url_path=r"interact/(?P<player_id>[^/]+)/(?P<npc_id>[^/]+)",
+    )
+    @csrf_exempt
+    @permission_classes([AllowAny])
+    def interact(self, request, player_id, npc_id):
+        message = request.data.get("message")
+        if not message:
+            return Response(
+                {"error": "You must provide a message"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        payload = {
+            "transmitter_character": player_id,
+            "recipient_character": npc_id,
+            "message": message,
+        }
+        context = PipelineContext(payload=payload)
+        conversation_pipeline = ConversationPipeline(context=context)
+        conversation_pipeline.run()
+
         interactions = Character.get_interactions(player_id, npc_id)
         interactions_serialized = CharacterInteractionSerializer(
             interactions, many=True, context={"request": request}
