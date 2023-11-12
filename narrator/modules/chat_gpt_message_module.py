@@ -17,7 +17,7 @@ class ChatGptMessageModule(PipelineModule[Input, Output]):
 
     def __init__(
         self,
-        name: str = "chat_gpt_assistant",
+        name: str = "chat_gpt_message",
         **kwargs: Any,
     ):
         super().__init__(name, **kwargs)

@@ -19,9 +19,7 @@ def test_chat_gpt_message_module(mock_message_content_text, mock_openai_threads)
     run_mock = MagicMock()
     run_mock.status = "complete"
     mock_openai_threads.runs.retrieve.return_value = run_mock
-
     mock_openai_threads.runs.create.return_value = MagicMock(status="queued")
-
     mock_openai_threads.messages.list.return_value = MagicMock(
         data=[MagicMock(content=[MagicMock(text=MagicMock(value="123"))])]
     )

@@ -12,7 +12,7 @@ class ChatGptThreadModule(PipelineModule[Input, Output]):
 
     def __init__(
         self,
-        name: str = "chat_gpt_assistant",
+        name: str = "chat_gpt_thread",
         **kwargs: Any,
     ):
         super().__init__(name, **kwargs)
@@ -33,4 +33,5 @@ class ChatGptThreadModule(PipelineModule[Input, Output]):
             initial_messages=initial_messages,
         )
         context.add("thread", thread)
+        context.add("thread_id", thread.id)
         return thread.id

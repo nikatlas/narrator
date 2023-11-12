@@ -134,7 +134,7 @@ disable = [
   "missing-module-docstring", "missing-function-docstring", "unrecognized-option", "fixme",
   "too-few-public-methods", "c-extension-no-member", "too-many-instance-attributes",
   "too-many-arguments", "no-name-in-module", "imported-auth-user",
-  "missing-class-docstring","too-many-ancestors"
+  "missing-class-docstring","too-many-ancestors", "duplicate-code"
 ]
 good-names-rgxs = "^[_a-z][_a-z0-9]?$"
 
