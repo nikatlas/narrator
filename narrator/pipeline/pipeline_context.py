@@ -5,6 +5,8 @@ from dataclasses import dataclass
 
 from narrator.utils import Enum
 
+UNSPECIFIED = object()
+
 
 class ExecutionStatus(Enum):
     """Execution status of a module."""
@@ -160,13 +162,13 @@ class PipelineContext:
             cloned_context._payload = new_payload  # pylint: disable=protected-access
         return cloned_context
 
-    def search_field(self, field: Any, default: Optional[Any] = None) -> Any:
+    def search_field(self, field: Any, default: Optional[Any] = UNSPECIFIED) -> Any:
         """
         Searches a field first in the payload, then as a fallback mechanism it tries
         to search it in the data attribute, if it is not present there either it
         retrieves default if the default is available, if not it will raise an error.
         :param field: Any
-        :default field: Any
+        :param default: Any
         :return:
         """
         if isinstance(self.payload, Dict) and field in self.payload:
@@ -176,9 +178,9 @@ class PipelineContext:
         if value is not None:
             return value
 
-        if default is None:
+        if default is UNSPECIFIED:
             raise ValueError(
-                "Could not find the attribute you were searching and no "
+                f"Could not find `{field}` and no "
                 "value was provided for the field 'default'!"
             )
 

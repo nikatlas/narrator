@@ -94,6 +94,7 @@ class ChatGpt:
     def create_assistant(
         self,
         name: str,
+        description: Optional[str] = None,
         instructions: Optional[str] = None,
         file_ids: Optional[List[str]] = None,
     ) -> Assistant:
@@ -112,6 +113,7 @@ class ChatGpt:
 
         assistant: Assistant = self.client.beta.assistants.create(
             name=f"Narrator Character - {name}",
+            description=description,
             instructions=instructions,
             tools=[{"type": "retrieval"}],
             model="gpt-4-1106-preview",
