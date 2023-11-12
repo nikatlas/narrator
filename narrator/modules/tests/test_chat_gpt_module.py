@@ -1,19 +1,16 @@
-from unittest.mock import patch
-
 import pytest
 
 from narrator.modules.chat_gpt_module import ChatGptModule
 from narrator.pipeline.pipeline_context import PipelineContext
 
 
-@patch("narrator.chatgpt.chat_gpt.openai")
-def test_chat_gpt_module(mock_openai):
+def test_chat_gpt_module(mock_openai_chat_completion):
     mock_response = {
         "choices": [
             {"message": {"role": "mock-role", "content": "this is a mock message"}}
         ]
     }
-    mock_openai.ChatCompletion.create.return_value = mock_response
+    mock_openai_chat_completion.create.return_value = mock_response
 
     payload = {
         "conversation": [

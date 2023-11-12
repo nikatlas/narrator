@@ -1,16 +1,12 @@
-from typing import Any, List
-
 from unittest.mock import patch
 
 import openai
 import pytest
-from openai.error import ServiceUnavailableError
 
-from narrator.chatgpt.chat_gpt import ChatGpt
+from narrator.chatgpt import ChatGpt
 
 
-@patch("narrator.chatgpt.chat_gpt.openai")
-def test_chat_gpt(mock_openai):
+def test_chat_gpt_completions(mock_openai_chat_completion):
     messages = [
         {"role": "system", "content": "You are a helpful assistant."},
         {
@@ -30,8 +26,8 @@ def test_chat_gpt(mock_openai):
     gpt = ChatGpt()
     gpt.request(messages, temperature=2.0)
 
-    mock_openai.ChatCompletion.create.assert_called_once_with(
-        model="gpt-3.5-turbo",
+    mock_openai_chat_completion.create.assert_called_once_with(
+        model="gpt-4-1106-preview",
         messages=messages,
         temperature=2.0,
         max_tokens=200,
@@ -41,8 +37,7 @@ def test_chat_gpt(mock_openai):
     )
 
 
-@patch("narrator.chatgpt.chat_gpt.openai")
-def test_chat_gpt_default(mock_openai):
+def test_chat_gpt_default(mock_openai_chat_completion):
     messages = [
         {"role": "system", "content": "You are a helpful assistant."},
     ]
@@ -50,8 +45,8 @@ def test_chat_gpt_default(mock_openai):
     gpt = ChatGpt()
     gpt.request(messages)
 
-    mock_openai.ChatCompletion.create.assert_called_once_with(
-        model="gpt-3.5-turbo",
+    mock_openai_chat_completion.create.assert_called_once_with(
+        model="gpt-4-1106-preview",
         messages=messages,
         temperature=1.0,
         max_tokens=200,
@@ -59,17 +54,6 @@ def test_chat_gpt_default(mock_openai):
         frequency_penalty=0,
         presence_penalty=0,
     )
-
-
-@patch("narrator.chatgpt.chat_gpt.openai")
-def test_chat_gpt_service_unavailable(mock_openai):
-    mock_openai.ChatCompletion.create.side_effect = ServiceUnavailableError(
-        "Service Unavailable"
-    )
-    messages: List[Any] = []
-    gpt = ChatGpt()
-    response = gpt.request(messages)
-    assert response is None
 
 
 @patch("narrator.chatgpt.chat_gpt.OPENAI_API_TYPE", "azure")
@@ -81,7 +65,7 @@ def test_chat_gpt_openai_vars():
     gpt.set_openai_api()
     assert openai.api_type == "azure"
     assert openai.api_key == "KEY_1"
-    assert openai.api_base == "ENDPOINT"
+    assert openai.base_url == "ENDPOINT"
     assert openai.api_version == "2023-05-15"
 
 

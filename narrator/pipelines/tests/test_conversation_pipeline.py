@@ -1,19 +1,16 @@
-from unittest.mock import patch
-
 import pytest
 
 from narrator.pipeline.pipeline_context import PipelineContext
 from narrator.pipelines.conversation_pipeline import ConversationPipeline
 
 
-@patch("narrator.chatgpt.chat_gpt.openai")
-def test_conversation_pipeline(mock_openai, test_characters):
+def test_conversation_pipeline(mock_openai_chat_completion, test_characters):
     mock_response = {
         "choices": [
             {"message": {"role": "assistant", "content": "this is a mock message"}}
         ]
     }
-    mock_openai.ChatCompletion.create.return_value = mock_response
+    mock_openai_chat_completion.create.return_value = mock_response
     payload = {
         "transmitter_character": test_characters[0].pk,
         "recipient_character": test_characters[1].pk,
@@ -35,8 +32,8 @@ def test_conversation_pipeline(mock_openai, test_characters):
     assert interactions[3].text == "this is a mock question"
     assert interactions[4].text == "this is a mock message"
 
-    assert len(mock_openai.ChatCompletion.create.mock_calls) == 1
-    mock_openai.ChatCompletion.create.assert_called_once_with(
+    assert len(mock_openai_chat_completion.create.mock_calls) == 1
+    mock_openai_chat_completion.create.assert_called_once_with(
         messages=[
             {
                 "role": "user",
@@ -60,13 +57,12 @@ def test_conversation_pipeline(mock_openai, test_characters):
         top_p=0.95,
         frequency_penalty=0.0,
         presence_penalty=0.0,
-        model="gpt-3.5-turbo",
+        model="gpt-4-1106-preview",
     )
 
 
-@patch("narrator.chatgpt.chat_gpt.openai")
 def test_conversation_pipeline_with_resources(
-    mock_openai, test_characters, test_resources
+    mock_openai_chat_completion, test_characters, test_resources
 ):
     test_characters[1].resources.add(test_resources[0])
     test_characters[1].resources.add(test_resources[1])
@@ -75,7 +71,7 @@ def test_conversation_pipeline_with_resources(
             {"message": {"role": "assistant", "content": "this is a mock message"}}
         ]
     }
-    mock_openai.ChatCompletion.create.return_value = mock_response
+    mock_openai_chat_completion.create.return_value = mock_response
     payload = {
         "transmitter_character": test_characters[0].pk,
         "recipient_character": test_characters[1].pk,
@@ -97,8 +93,8 @@ def test_conversation_pipeline_with_resources(
     assert interactions[3].text == "this is a mock question"
     assert interactions[4].text == "this is a mock message"
 
-    assert len(mock_openai.ChatCompletion.create.mock_calls) == 1
-    mock_openai.ChatCompletion.create.assert_called_once_with(
+    assert len(mock_openai_chat_completion.create.mock_calls) == 1
+    mock_openai_chat_completion.create.assert_called_once_with(
         messages=[
             {"role": "system", "content": "A tasty burger."},
             {"role": "system", "content": "A portion of fries."},
@@ -124,7 +120,7 @@ def test_conversation_pipeline_with_resources(
         top_p=0.95,
         frequency_penalty=0.0,
         presence_penalty=0.0,
-        model="gpt-3.5-turbo",
+        model="gpt-4-1106-preview",
     )
 
 
