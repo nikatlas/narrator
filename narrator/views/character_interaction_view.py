@@ -6,7 +6,7 @@ from rest_framework.response import Response
 
 from narrator.models import Character, CharacterInteraction
 from narrator.pipeline import PipelineContext
-from narrator.pipelines import ConversationPipeline
+from narrator.pipelines.thread_conversation_pipeline import ThreadConversationPipeline
 from narrator.serializers import CharacterInteractionSerializer
 
 
@@ -47,7 +47,7 @@ class CharacterInteractionViewSet(viewsets.ModelViewSet):
             "message": message,
         }
         context = PipelineContext(payload=payload)
-        conversation_pipeline = ConversationPipeline(context=context)
+        conversation_pipeline = ThreadConversationPipeline(context=context)
         conversation_pipeline.run()
 
         interactions = Character.get_interactions(player_id, npc_id)

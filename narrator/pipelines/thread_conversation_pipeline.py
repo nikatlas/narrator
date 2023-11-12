@@ -87,11 +87,16 @@ class ThreadConversationPipeline(Pipeline):
     @staticmethod
     def get_instructions(transmitter, recipient, resources):
         instructions = (
-            f"Your character is {transmitter.first_name} "
-            f"{transmitter.last_name} and you are talking to "
-            f"{recipient.first_name} {recipient.last_name}."
+            "You are role-playing a character."
+            "Responds as if you are that character with only the knowledge you have "
+            "for your world and nothing more. The knowledge about your character can "
+            "be found in the messages of the threads or the files attached to a "
+            "thread or the assistant. Global information should be hidden."
+            f"Your character is {recipient.first_name} "
+            f"{recipient.last_name} and you are talking to "
+            f"{transmitter.first_name} {transmitter.last_name}."
             "The following are the resources you have available and specific to the "
-            f"character {transmitter.first_name} {transmitter.last_name}: \n"
+            f"character {recipient.first_name} {recipient.last_name}: \n"
         )
 
         instructions += "\n\n".join([r["content"] for r in resources])
