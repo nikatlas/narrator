@@ -1,5 +1,7 @@
 from typing import Any, List, Optional
 
+from django.db import transaction
+
 from .pipeline_context import ExecutionState, ExecutionStatus, PipelineContext
 from .pipeline_module import PipelineModule
 
@@ -97,6 +99,7 @@ class Pipeline:
 
         return self
 
+    @transaction.atomic
     def run(self) -> PipelineContext:
         """
         Runs the pipeline.

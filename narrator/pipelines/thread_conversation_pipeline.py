@@ -1,6 +1,8 @@
 from typing import Any
 
-from narrator.models import Character, CharacterInteraction
+from django.core.exceptions import ObjectDoesNotExist
+
+from narrator.models import Character, CharacterInteraction, CharacterThread
 from narrator.modules.chat_gpt_assistant_module import ChatGptAssistantModule
 from narrator.modules.chat_gpt_message_module import ChatGptMessageModule
 from narrator.modules.chat_gpt_thread_module import ChatGptThreadModule
@@ -52,6 +54,16 @@ class ThreadConversationPipeline(Pipeline):
         context.add("assistant_id", ASSISTANT_ID)
         skip = ["chat_gpt_assistant"]
         thread_id = context.search_field("thread_id", None)
+        if not thread_id:
+            try:
+                thread_id = CharacterThread.objects.get(
+                    transmitter_character_id=transmitter_character_pk,
+                    recipient_character_id=recipient_character_pk,
+                ).thread_id
+                context.add("thread_id", thread_id)
+            except ObjectDoesNotExist:
+                pass
+
         if thread_id:
             skip.append("chat_gpt_thread")
         context.add("skip", skip)
@@ -81,6 +93,14 @@ class ThreadConversationPipeline(Pipeline):
             recipient_character_id=transmitter_character_pk,
             text=answer,
         )
+
+        if thread_id := context.search_field("thread_id", None):
+            if not CharacterThread.objects.filter(thread_id=thread_id).exists():
+                CharacterThread.objects.create(
+                    thread_id=thread_id,
+                    transmitter_character_id=transmitter_character_pk,
+                    recipient_character_id=recipient_character_pk,
+                )
 
         return context.result
 

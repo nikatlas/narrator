@@ -9,6 +9,9 @@ class CharacterThread(models.Model):
 
         verbose_name = "Thread"
         verbose_name_plural = "Threads"
+        indexes = [
+            models.Index(fields=["thread_id"]),
+        ]
 
     transmitter_character = models.ForeignKey(
         "Character",
