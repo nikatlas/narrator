@@ -21,6 +21,7 @@ def test_chatgpt_assistant(mock_openai_assistant):
 
     mock_openai_assistant.create.assert_called_once_with(
         name="Narrator Character - test-character",
+        description=None,
         instructions="test instructions",
         tools=[{"type": "retrieval"}],
         model="gpt-4-1106-preview",
