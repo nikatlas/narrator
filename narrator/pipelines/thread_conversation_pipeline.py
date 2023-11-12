@@ -2,6 +2,7 @@ from typing import Any
 
 from django.core.exceptions import ObjectDoesNotExist
 
+from narrator.chatgpt import ChatGpt
 from narrator.models import Character, CharacterInteraction, CharacterThread
 from narrator.modules.chat_gpt_assistant_module import ChatGptAssistantModule
 from narrator.modules.chat_gpt_message_module import ChatGptMessageModule
@@ -116,9 +117,15 @@ class ThreadConversationPipeline(Pipeline):
             f"{recipient.last_name} and you are talking to "
             f"{transmitter.first_name} {transmitter.last_name}."
             "The following are the resources you have available and specific to the "
-            f"character {recipient.first_name} {recipient.last_name}: \n"
+            f"character {recipient.first_name} {recipient.last_name}. Any secrets "
+            f"included should be well kept and not revealed unless stated otherwise: \n"
         )
 
         instructions += "\n\n".join([r["content"] for r in resources])
 
         return instructions
+
+    @staticmethod
+    def delete_thread(thread_id):
+        gpt = ChatGpt(assistant_id=ASSISTANT_ID)
+        gpt.delete_thread(thread_id=thread_id)

@@ -4,7 +4,7 @@ from rest_framework.decorators import action, permission_classes
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
-from narrator.models import Character, CharacterInteraction
+from narrator.models import Character, CharacterInteraction, CharacterThread
 from narrator.pipeline import PipelineContext
 from narrator.pipelines.thread_conversation_pipeline import ThreadConversationPipeline
 from narrator.serializers import CharacterInteractionSerializer
@@ -55,3 +55,29 @@ class CharacterInteractionViewSet(viewsets.ModelViewSet):
             interactions, many=True, context={"request": request}
         )
         return Response(interactions_serialized.data)
+
+    @action(
+        detail=False,
+        methods=["delete"],
+        url_path=r"interact/(?P<player_id>[^/]+)/(?P<npc_id>[^/]+)/clear",
+    )
+    @csrf_exempt
+    @permission_classes([AllowAny])
+    def clear_interactions(self, request, player_id, npc_id):
+
+        try:
+            CharacterInteraction.objects.filter(
+                transmitter_character_id=player_id, recipient_character_id=npc_id
+            ).delete()
+            CharacterInteraction.objects.filter(
+                transmitter_character_id=npc_id, recipient_character_id=player_id
+            ).delete()
+            thread = CharacterThread.objects.get(
+                transmitter_character_id=player_id, recipient_character_id=npc_id
+            )
+            ThreadConversationPipeline.delete_thread(thread.thread_id)
+            thread.delete()
+        except CharacterThread.DoesNotExist:
+            Response({"status": "not-found"}, status=status.HTTP_404_NOT_FOUND)
+
+        return Response({"status": "ok"}, status=status.HTTP_204_NO_CONTENT)

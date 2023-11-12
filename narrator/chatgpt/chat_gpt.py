@@ -154,6 +154,12 @@ class ChatGpt:
 
         return thread
 
+    def delete_thread(self, thread_id: str) -> None:
+        if not thread_id:
+            raise RuntimeError("Thread ID not specified.")
+
+        self.client.beta.threads.delete(thread_id=thread_id)
+
     def append_message_to_thread(
         self,
         thread_id: str,
