@@ -7,4 +7,4 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         model = User
         fields = ["url", "username", "email", "is_staff"]
 
-    id = serializers.ReadOnlyField()
+    is_staff = serializers.BooleanField(read_only=True)
