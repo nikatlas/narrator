@@ -1,21 +1,20 @@
 from rest_framework import serializers
 
-from narrator.models import Campaign
+from narrator.models import Place
 
 
-class CampaignSerializer(serializers.HyperlinkedModelSerializer):
-    """Campaign serializer."""
+class PlaceSerializer(serializers.HyperlinkedModelSerializer):
+    """Place serializer."""
 
-    queryset = Campaign.objects.all()
+    queryset = Place.objects.all()
 
     class Meta:
-        model = Campaign
+        model = Place
         fields = [
             "url",
             "id",
             "name",
             "description",
-            "owner",
         ]
 
     id = serializers.IntegerField(read_only=True)

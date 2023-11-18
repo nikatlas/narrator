@@ -6,6 +6,7 @@ from narrator.views import (
     CampaignViewSet,
     CharacterInteractionViewSet,
     CharacterViewSet,
+    PlaceViewSet,
     ResourceViewSet,
     UserViewSet,
 )
@@ -15,6 +16,7 @@ router.register(r"users", UserViewSet)
 router.register(r"campaign", CampaignViewSet)
 router.register(r"character", CharacterViewSet)
 router.register(r"character-interaction", CharacterInteractionViewSet)
+router.register(r"place", PlaceViewSet)
 router.register(r"resource", ResourceViewSet)
 
 urlpatterns = [
