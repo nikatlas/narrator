@@ -17,7 +17,7 @@ class Campaign(models.Model):
         verbose_name_plural = "Campaigns"
 
     name = models.CharField(max_length=255)
-    description = models.CharField(max_length=255)
+    description = models.TextField()
     owner = models.ForeignKey(User, related_name="campaigns", on_delete=models.CASCADE)
 
     created_at = models.DateTimeField(auto_now_add=True)
