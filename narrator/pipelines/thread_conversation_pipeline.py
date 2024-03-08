@@ -113,6 +113,10 @@ class ThreadConversationPipeline(Pipeline):
             "for your world and nothing more. The knowledge about your character can "
             "be found in the messages of the threads or the files attached to a "
             "thread or the assistant. Global information should be hidden."
+            # "When the charecter is talking wrap the text with
+            # <Character></Character>,"
+            # "Narrate briefly the thoughts and actions of the character and wrap the "
+            # "text with <Narrator></Narrator>."
             f"Your character is {recipient.first_name} "
             f"{recipient.last_name} and you are talking to "
             f"{transmitter.first_name} {transmitter.last_name}."

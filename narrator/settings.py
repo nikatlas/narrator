@@ -1,9 +1,11 @@
 from os import environ, path
 from pathlib import Path
 
-from narrator.constants import DATABASE_DIR
+from narrator import env
 
+DJANGO_DEBUG = environ.get("DJANGO_DEBUG", True)
 DEBUG = environ.get("DJANGO_DEBUG", True)
+
 ALLOWED_HOSTS = ["*"]
 
 ROOT_URLCONF = "narrator.urls"
@@ -54,9 +56,10 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework.authentication.BasicAuthentication"
     ],
+    "DEFAULT_FILTER_BACKENDS": ["django_filters.rest_framework.DjangoFilterBackend"],
 }
 
-STATIC_URL = "static/"
+STATIC_URL = "/static/"
 STATIC_ROOT = path.join(BASE_DIR, "static")
 
 SECRET_KEY = "secret"
@@ -64,12 +67,23 @@ SECRET_KEY = "secret"
 SITE_ID = 1
 LOGIN_URL = "/admin/login/"
 
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.sqlite3",
+#         "NAME": path.join(DATABASE_DIR, "narrator_local.db"),
+#     },
+# }
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": path.join(DATABASE_DIR, "narrator_local.db"),
-    },
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": env.str("DJANGO_DB_NAME", "app"),
+        "USER": env.str("DJANGO_DB_USER", "app"),
+        "PASSWORD": env.str("DJANGO_DB_PASSWORD", "app"),
+        "HOST": env.str("DJANGO_DB_HOST", "localhost"),
+        "ATOMIC_REQUESTS": True,
+    }
 }
+
 
 # Redis Caching
 CACHES = {

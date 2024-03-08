@@ -20,6 +20,9 @@ django-redis = "^5.4.0"
 djangorestframework = "^3.14.0"
 markdown = "^3.5.1"
 django-filter = "^23.3"
+psycopg = "^3.1.18"
+pylibmc = "^1.6.3"
+holdup = "^4.0.0"
 
 
 [tool.poetry.group.dev.dependencies]
