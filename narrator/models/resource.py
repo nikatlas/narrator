@@ -1,7 +1,10 @@
 from django.db import models
+from langchain_core.documents import Document
+
+from narrator.retrieval.vector_store_model_mixin import VectorStoreModelMixin
 
 
-class Resource(models.Model):
+class Resource(VectorStoreModelMixin, models.Model):
     """Resource model.
 
     Resources are pieces of information that can be attached to characters.
@@ -20,3 +23,6 @@ class Resource(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def to_documents(self):
+        return [Document(self.text, metadata={"id": self.pk, "name": self.name})]

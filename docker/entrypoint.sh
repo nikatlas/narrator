@@ -16,7 +16,7 @@ urlencode() {
     done
 }
 
-pysu app django-admin collectstatic --noinput --clear -v0
+django-admin collectstatic --noinput --clear -v0
 
 encoded_password=$(urlencode "$DJANGO_DB_PASSWORD")
 holdup --verbose "pg://$DJANGO_DB_USER:$encoded_password@$DJANGO_DB_HOST:5432/$DJANGO_DB_NAME"
