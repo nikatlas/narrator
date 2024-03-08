@@ -36,5 +36,20 @@ services:
       - "6333:6333"
       - "6334:6334"
 
+  ollama:
+    image: ollama/ollama:latest
+    volumes:
+      - ollama_data:/root/.ollama/
+#  ollama-client:
+#    build:
+#      dockerfile: docker/ollama/Dockerfile
+#    environment:
+#      LLM: "mistral"
+#      OLLAMA_BASE_URL: "http://ollama:11434"
+#
+#    depends_on:
+#      - ollama
+
 volumes:
   postgres_data:
+  ollama_data:

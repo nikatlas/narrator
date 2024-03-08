@@ -25,4 +25,10 @@ class Resource(VectorStoreModelMixin, models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def to_documents(self):
-        return [Document(self.text, metadata={"id": self.pk, "name": self.name})]
+        return [Document(self.text, metadata={"pk": self.pk, "name": self.name})]
+
+    def get_vector_store_collection_name(self):
+        return "resources"
+
+    def get_document_object_id_field(self):
+        return "pk"
