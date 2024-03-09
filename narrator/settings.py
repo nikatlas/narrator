@@ -78,6 +78,7 @@ DATABASES = {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": env.str("DJANGO_DB_NAME", "app"),
         "USER": env.str("DJANGO_DB_USER", "app"),
+        "PORT": env.str("DJANGO_DB_PORT", "5432"),
         "PASSWORD": env.str("DJANGO_DB_PASSWORD", "app"),
         "HOST": env.str("DJANGO_DB_HOST", "localhost"),
         "ATOMIC_REQUESTS": True,

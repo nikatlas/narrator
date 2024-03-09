@@ -36,7 +36,7 @@ class ConversationPipeline(Pipeline):
         transmitter = Character.objects.get(pk=transmitter_character_pk)
         recipient = Character.objects.get(pk=recipient_character_pk)
 
-        conversation_context = recipient.get_context(transmitter)
+        conversation_context = recipient.get_context(transmitter, message)
         context.add("resources", conversation_context["resources"])
         context.add("interactions", conversation_context["interactions"])
 

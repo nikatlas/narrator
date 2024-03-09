@@ -49,6 +49,10 @@ class Character(models.Model):
         """
 
         interactions = self.get_interactions(other_character)
+        # resources = Resource.vector_store_retrieve(
+        #     self.resources.all(),
+        #     prompt,
+        # )
         resources = self.resources.all()
 
         serialized_interactions = [

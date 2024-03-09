@@ -1,6 +1,10 @@
 from django.db import models
+from langchain.indexes.base import RecordManager
 from langchain_core.documents import Document
+from langchain_core.vectorstores import VectorStore
 
+from narrator.retrieval.index import get_resources_record_manager
+from narrator.retrieval.vector_store import get_resources_vector_store
 from narrator.retrieval.vector_store_model_mixin import VectorStoreModelMixin
 
 
@@ -25,10 +29,18 @@ class Resource(VectorStoreModelMixin, models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def to_documents(self):
-        return [Document(self.text, metadata={"pk": self.pk, "name": self.name})]
+        return [Document(self.text, metadata={"pk": str(self.pk), "name": self.name})]
 
     def get_vector_store_collection_name(self):
         return "resources"
 
     def get_document_object_id_field(self):
         return "pk"
+
+    @classmethod
+    def get_vector_store(cls) -> VectorStore:
+        return get_resources_vector_store()
+
+    @classmethod
+    def get_vector_store_record_manager(cls) -> RecordManager:
+        return get_resources_record_manager()
