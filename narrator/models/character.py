@@ -1,7 +1,9 @@
 from django.db import models
 from django.db.models import Q
+from qdrant_client.http.models import FieldCondition, Filter, MatchAny
 
-from ..chatgpt.serializers import serialize_character_interaction, serialize_resource
+from ..chatgpt.serializers import serialize_character_interaction
+from ..retrieval.vector_store import get_resources_vector_store
 from .character_interaction import CharacterInteraction
 
 
@@ -36,7 +38,7 @@ class Character(models.Model):
             | Q(recipient_character=other_character, transmitter_character=self)
         ).order_by("created_at")
 
-    def get_context(self, other_character):
+    def get_context(self, other_character, prompt):
         """Get the context of the character.
         This includes:
          - previous interactions with the user
@@ -55,11 +57,37 @@ class Character(models.Model):
         # )
         resources = self.resources.all()
 
+        # FIND 4 (by default) relevant resources
+        resources_pk = [str(s) for s in resources.values_list("pk", flat=True)]
+        retriever = get_resources_vector_store().as_retriever(
+            search_kwargs={
+                "filter": Filter(
+                    must=[
+                        FieldCondition(
+                            key="metadata.pk", match=MatchAny(any=resources_pk)
+                        )
+                    ]
+                )
+            }
+        )
+        relevant_resources = retriever.get_relevant_documents(prompt)
+        print("#########################")
+        print(resources_pk)
+        print("^^^^^^^^^^^^^^^^^")
+        print(relevant_resources)
+        serialized_resources = [
+            {"content": resource.page_content} for resource in relevant_resources
+        ]
+        print("#########################")
+        print(serialized_resources)
+        print("#########################")
+        # serialized_resources =
+        # [serialize_resource(resource) for resource in resources]
+
         serialized_interactions = [
             serialize_character_interaction(self, interaction)
             for interaction in interactions
         ]
-        serialized_resources = [serialize_resource(resource) for resource in resources]
 
         return {
             "interactions": serialized_interactions,

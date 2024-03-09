@@ -46,7 +46,7 @@ class ThreadConversationPipeline(Pipeline):
         transmitter = Character.objects.get(pk=transmitter_character_pk)
         recipient = Character.objects.get(pk=recipient_character_pk)
 
-        conversation_context = recipient.get_context(transmitter)
+        conversation_context = recipient.get_context(transmitter, message)
 
         context.add("resources", conversation_context["resources"])
         context.add("interactions", conversation_context["interactions"])
@@ -55,6 +55,7 @@ class ThreadConversationPipeline(Pipeline):
         context.add("assistant_id", ASSISTANT_ID)
         skip = ["chat_gpt_assistant"]
         thread_id = context.search_field("thread_id", None)
+        print(thread_id)
         if not thread_id:
             try:
                 thread_id = CharacterThread.objects.get(
@@ -64,7 +65,7 @@ class ThreadConversationPipeline(Pipeline):
                 context.add("thread_id", thread_id)
             except ObjectDoesNotExist:
                 pass
-
+        print(context.get("thread_id", None))
         if thread_id:
             skip.append("chat_gpt_thread")
         context.add("skip", skip)
@@ -76,6 +77,11 @@ class ThreadConversationPipeline(Pipeline):
             ),
         )
 
+        print(">>>>>>>>>>>>>>>>>>")
+        print(context.get("message", "-"))
+        print(">>>>>>>>>>>>>>>>>>")
+        print(context.get("instructions", "-"))
+        print("<<<<<<<<<<<<<<<<<<")
         return context.payload
 
     def post_process(self, context: PipelineContext) -> Any:

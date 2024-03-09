@@ -14,7 +14,7 @@
 # # loader = WebBaseLoader("https://tonersales.eu/shop")
 # URL = "https://tonersales.eu/shop"
 # loader = RecursiveUrlLoader(
-#     url=URL, max_depth=2, extractor=lambda x: Soup(x, "html.parser").text
+#     url=URL, max_depth=1, extractor=lambda x: Soup(x, "html.parser").text
 # )
 # docs = loader.load()
 # print(f"Loaded {len(docs)} docs")
