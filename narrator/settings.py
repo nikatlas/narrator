@@ -142,6 +142,11 @@ DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 
 USE_TZ = False
 
+# AI - QDRANT - Vector Store
+QDRANT_HOST = env.str("QDRANT_HOST", "localhost")
+OLLAMA_HOST = env.str("OLLAMA_HOST", "localhost")
+OLLAMA_PORT = env.int("OLLAMA_PORT", 11434)
+
 ###################################
 # Debug mode configuration
 if DEBUG:

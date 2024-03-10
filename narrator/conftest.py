@@ -1,9 +1,11 @@
+import sys
 from unittest.mock import MagicMock, patch
 
 import pytest
 
 # pylint: disable=wildcard-import, unused-wildcard-import, redefined-outer-name
 from .fixtures import *  # noqa
+from .retrieval.vector_store import VectorStoreClient
 
 
 def pytest_collection_modifyitems(items):
@@ -53,3 +55,14 @@ def mock_openai_assistant(mock_openai_client):
     mock_openai_assistants = MagicMock()
     mock_openai_client.beta.assistants = mock_openai_assistants
     yield mock_openai_assistants
+
+
+@pytest.fixture(scope="session", autouse=True)
+def mock_vector_store():
+    with patch.object(
+        sys.modules["narrator.retrieval.vector_store"],
+        "RESOURCES_COLLECTION",
+        "test_resources",
+    ):
+        yield
+    VectorStoreClient.delete_collection("test_resources")
