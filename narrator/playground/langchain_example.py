@@ -2,7 +2,8 @@
 # from langchain.chains import create_retrieval_chain
 # from langchain.chains.combine_documents import create_stuff_documents_chain
 # from langchain.vectorstores import Qdrant
-# from langchain_community.document_loaders import RecursiveUrlLoader  # , WebBaseLoader
+# from langchain_community.document_loaders import RecursiveUrlLoader, \
+#     PyPDFLoader  # , WebBaseLoader
 # from langchain_community.embeddings import OllamaEmbeddings
 # from langchain_community.llms import Ollama
 #

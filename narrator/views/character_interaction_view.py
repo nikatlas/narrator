@@ -72,11 +72,12 @@ class CharacterInteractionViewSet(viewsets.ModelViewSet):
             CharacterInteraction.objects.filter(
                 transmitter_character_id=npc_id, recipient_character_id=player_id
             ).delete()
-            thread = CharacterThread.objects.get(
+            threads = CharacterThread.objects.filter(
                 transmitter_character_id=player_id, recipient_character_id=npc_id
             )
-            ThreadConversationPipeline.delete_thread(thread.thread_id)
-            thread.delete()
+            for thread in threads:
+                ThreadConversationPipeline.delete_thread(thread.thread_id)
+            threads.delete()
         except CharacterThread.DoesNotExist:
             Response({"status": "not-found"}, status=status.HTTP_404_NOT_FOUND)
 

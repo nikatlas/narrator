@@ -75,5 +75,5 @@ def test_resource_vector_store_returns_relevant_documents(test_resources):
         },
     )
 
-    docs = retriever.get_relevant_documents("A drink please!")
+    docs = retriever.get_relevant_documents("I want to buy a car! I need a fast car.")
     assert docs

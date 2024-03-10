@@ -6,7 +6,7 @@ authors = ["Nikos Atlas <nikatlas@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = "3.11.4"
 azure-cognitiveservices-speech = "^1.32.1"
 django = "^4.2.7"
 django-postgres-extra = "^2.0.8"
@@ -28,6 +28,7 @@ langchain = "^0.1.11"
 beautifulsoup4 = "^4.12.3"
 qdrant-client = "^1.8.0"
 psycopg2-binary = "^2.9.9"
+sentence-transformers = "^2.5.1"
 
 [tool.poetry.group.dev.dependencies]
 bandit = "^1.7.1"

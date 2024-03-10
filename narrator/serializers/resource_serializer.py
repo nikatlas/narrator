@@ -8,4 +8,4 @@ class ResourceSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Resource
-        fields = ["url", "name", "text"]
+        fields = ["url", "name", "text", "file"]

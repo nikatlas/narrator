@@ -1,5 +1,6 @@
 from django.db import models
 from langchain.indexes.base import RecordManager
+from langchain_community.document_loaders import PyPDFLoader
 from langchain_core.documents import Document
 from langchain_core.vectorstores import VectorStore
 
@@ -24,12 +25,23 @@ class Resource(VectorStoreModelMixin, models.Model):
 
     name = models.CharField(max_length=255)
     text = models.TextField()
+    file = models.FileField(upload_to="uploads", null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def to_documents(self):
-        return [Document(self.text, metadata={"pk": str(self.pk), "name": self.name})]
+        documents = [
+            Document(self.text, metadata={"pk": str(self.pk), "name": self.name})
+        ]
+        if self.file:
+            loader = PyPDFLoader(self.file.name)
+            pages = loader.load_and_split()
+            for page in pages:
+                page.metadata["pk"] = str(self.pk)
+                page.metadata["name"] = self.name
+            documents.extend(pages)
+        return documents
 
     def get_vector_store_collection_name(self):
         return "resources"

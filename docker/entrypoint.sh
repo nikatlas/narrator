@@ -16,11 +16,11 @@ urlencode() {
     done
 }
 
-django-admin collectstatic --noinput --clear -v0
+poetry run django-admin collectstatic --noinput --clear -v0
 
 encoded_password=$(urlencode "$DJANGO_DB_PASSWORD")
 holdup --verbose "pg://$DJANGO_DB_USER:$encoded_password@$DJANGO_DB_HOST:5432/$DJANGO_DB_NAME"
-django-admin migrate --noinput --fake-initial
+poetry run django-admin migrate --noinput --fake-initial
 
 
 set -x

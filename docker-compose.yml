@@ -23,6 +23,8 @@ services:
       DJANGO_DB_PASSWORD: app
       DJANGO_DB_HOST: db
       DJANGO_SETTINGS_MODULE: narrator.settings
+      QDRANT_HOST: qdrant
+      QDRANT_PORT: 6333
     volumes:
       - .:/app
     ports:

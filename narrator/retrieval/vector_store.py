@@ -27,7 +27,7 @@ def get_resources_vector_store() -> VectorStore:
     if not VectorStoreClient.collection_exists(RESOURCES_COLLECTION):
         VectorStoreClient.create_collection(
             RESOURCES_COLLECTION,
-            VectorParams(size=4096, distance=Distance.COSINE),
+            VectorParams(size=384, distance=Distance.COSINE),
         )
 
     RESOURCES_VECTOR_STORE = Qdrant(

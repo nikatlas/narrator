@@ -2,6 +2,8 @@ databases/*
 
 .DS_Store
 
+uploads/
+
 static/
 
 # .idea files
