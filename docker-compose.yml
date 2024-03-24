@@ -13,7 +13,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data/
 
-  web:
+  backend:
     build:
       context: .
       dockerfile: docker/Dockerfile
@@ -25,14 +25,37 @@ services:
       DJANGO_SETTINGS_MODULE: narrator.settings
       QDRANT_HOST: qdrant
       QDRANT_PORT: 6333
-      DEBUG: "false"
-      DJANGO_DEBUG: "false"
+      DEBUG: "true"
+      DJANGO_DEBUG: "true"
+      DJANGO_STATIC_URL: "/django_static/"
+      DJANGO_STATIC_ROOT: "/app/django_static/"
     volumes:
+      - django_static:/app/django_static
       - .:/app
     ports:
       - "9001:8000"
     depends_on:
       - db
+
+  frontend:
+    build:
+      context: frontend
+      dockerfile: docker/Dockerfile
+    volumes:
+      - ./frontend:/app
+    ports:
+      - "3000:3000"
+
+  nginx:
+    image: nginx:1.19
+    ports:
+      - "6006:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - django_static:/app/django/django_static
+    depends_on:
+      - backend
+      - frontend
 
   qdrant:
     image: qdrant/qdrant:latest
@@ -62,3 +85,4 @@ volumes:
   postgres_data:
   ollama_data:
   qdrant_data:
+  django_static:

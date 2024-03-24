@@ -59,8 +59,8 @@ REST_FRAMEWORK = {
     "DEFAULT_FILTER_BACKENDS": ["django_filters.rest_framework.DjangoFilterBackend"],
 }
 
-STATIC_URL = "/static/"
-STATIC_ROOT = path.join(BASE_DIR, "static")
+STATIC_URL = env.str("DJANGO_STATIC_URL", "/static/")
+STATIC_ROOT = env.str("DJANGO_STATIC_ROOT", path.join(BASE_DIR, "static"))
 
 SECRET_KEY = "secret"
 

@@ -5,6 +5,7 @@ databases/*
 uploads/
 
 static/
+django_static/
 
 # .idea files
 .idea/
