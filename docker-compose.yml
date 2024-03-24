@@ -25,6 +25,8 @@ services:
       DJANGO_SETTINGS_MODULE: narrator.settings
       QDRANT_HOST: qdrant
       QDRANT_PORT: 6333
+      DEBUG: "false"
+      DJANGO_DEBUG: "false"
     volumes:
       - .:/app
     ports:

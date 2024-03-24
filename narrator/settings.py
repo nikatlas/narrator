@@ -1,10 +1,10 @@
-from os import environ, path
+from os import path
 from pathlib import Path
 
 from narrator import env
 
-DJANGO_DEBUG = environ.get("DJANGO_DEBUG", True)
-DEBUG = environ.get("DJANGO_DEBUG", True)
+DJANGO_DEBUG = env.bool("DJANGO_DEBUG", True)
+DEBUG = env.bool("DJANGO_DEBUG", True)
 
 ALLOWED_HOSTS = ["*"]
 

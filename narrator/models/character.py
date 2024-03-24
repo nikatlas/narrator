@@ -71,16 +71,9 @@ class Character(models.Model):
             }
         )
         relevant_resources = retriever.get_relevant_documents(prompt)
-        print("#########################")
-        print(resources_pk)
-        print("^^^^^^^^^^^^^^^^^")
-        print(relevant_resources)
         serialized_resources = [
             {"content": resource.page_content} for resource in relevant_resources
         ]
-        print("#########################")
-        print(serialized_resources)
-        print("#########################")
         # serialized_resources =
         # [serialize_resource(resource) for resource in resources]
 

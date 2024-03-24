@@ -1,3 +1,4 @@
+import structlog
 from django.db import models
 from langchain.indexes.base import RecordManager
 from langchain_community.document_loaders import PyPDFLoader
@@ -7,6 +8,8 @@ from langchain_core.vectorstores import VectorStore
 from narrator.retrieval.index import get_resources_record_manager
 from narrator.retrieval.vector_store import get_resources_vector_store
 from narrator.retrieval.vector_store_model_mixin import VectorStoreModelMixin
+
+logger = structlog.getLogger(__name__)
 
 
 class Resource(VectorStoreModelMixin, models.Model):
@@ -35,13 +38,18 @@ class Resource(VectorStoreModelMixin, models.Model):
             Document(self.text, metadata={"pk": str(self.pk), "name": self.name})
         ]
         if self.file:
-            loader = PyPDFLoader(self.file.name)
-            pages = loader.load_and_split()
-            for page in pages:
-                page.metadata["pk"] = str(self.pk)
-                page.metadata["name"] = self.name
-            documents.extend(pages)
+            try:
+                loader = PyPDFLoader(self.file.name)
+                pages = loader.load()
+                documents.extend(pages)
+            except Exception as exc:  # pylint: disable=broad-except
+                logger.error("Error loading PDF", error=exc)
         return documents
+
+    def add_metadata(self, document):
+        document.metadata["pk"] = str(self.pk)
+        document.metadata["name"] = self.name
+        return document
 
     def get_vector_store_collection_name(self):
         return "resources"
