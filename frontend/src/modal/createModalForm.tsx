@@ -1,15 +1,10 @@
 import { Button } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import Modal, { ModalProps } from "@/modal/modal";
-import React, {
-  FormEventHandler,
-  ReactElement,
-  ReactNode,
-  useCallback,
-} from "react";
-import { Form, Formik, useFormik } from "formik";
+import React, { ReactNode, useCallback } from "react";
+import { Form, Formik } from "formik";
 
-interface CreateModalProps extends ModalProps {
+export interface CreateModalFormProps extends ModalProps {
   loading: boolean;
   initialValues: any;
   onSubmit: (values: any) => void;
@@ -26,7 +21,7 @@ const CreateModalForm = ({
   children,
   triggerButtonText,
   ...rest
-}: CreateModalProps) => {
+}: CreateModalFormProps) => {
   const [isOpen, setIsOpen] = React.useState(false);
 
   const defaultTriggerButtonComponent = useCallback(

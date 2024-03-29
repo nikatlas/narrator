@@ -62,6 +62,10 @@ class NarratorAPI extends HttpAPI {
   deleteResource(id: number) {
     return this.delete(`resource/${id}/`);
   }
+
+  updateResource(resource: Resource) {
+    return this.put(`resource/${resource.id}/`, resource);
+  }
 }
 
 export default NarratorAPI;

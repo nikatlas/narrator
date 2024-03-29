@@ -4,15 +4,20 @@ import {
   ResourcesCreateFetcher,
   ResourcesDeleteFetcher,
   ResourcesFetcher,
+  ResourcesUpdateFetcher,
 } from "@/resources/state/thunk";
-import { NewResource } from "@/resources/types";
+import { NewResource, Resource } from "@/resources/types";
 
 export const selectResources = (state: any) => {
   return state.resources;
 };
 
 export const useResources = () => {
-  return useAppSelector(selectResources);
+  const { data, ...rest } = useAppSelector(selectResources);
+  return {
+    data: [...data].sort((a: Resource, b: Resource) => b.id - a.id),
+    ...rest,
+  };
 };
 
 export const useCreateResource = () => {
@@ -43,4 +48,18 @@ export const useFetchResources = () => {
       dispatch(ResourcesFetcher.action());
     }
   }, [dispatch, loading]);
+};
+
+export const useUpdateResources = () => {
+  const dispatch = useAppDispatch();
+  const { loading } = useResources();
+  return useCallback(
+    (resource: Resource) => {
+      const { file, ...rest } = resource;
+      if (!loading) {
+        dispatch(ResourcesUpdateFetcher.action(rest));
+      }
+    },
+    [dispatch, loading],
+  );
 };

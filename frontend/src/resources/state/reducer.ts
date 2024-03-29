@@ -3,6 +3,7 @@ import {
   ResourcesCreateFetcher,
   ResourcesDeleteFetcher,
   ResourcesFetcher,
+  ResourcesUpdateFetcher,
 } from "@/resources/state/thunk";
 import { fetcherInitialState } from "@/redux/fetcher";
 
@@ -18,6 +19,7 @@ export const resourcesSlice = createSlice({
     ResourcesFetcher.reducers(builder);
     ResourcesCreateFetcher.reducers(builder);
     ResourcesDeleteFetcher.reducers(builder);
+    ResourcesUpdateFetcher.reducers(builder);
   },
 });
 

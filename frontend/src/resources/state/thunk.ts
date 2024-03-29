@@ -29,3 +29,18 @@ export const ResourcesDeleteFetcher = new Fetcher(
     });
   },
 );
+
+export const ResourcesUpdateFetcher = new Fetcher(
+  "resources/update",
+  async (resource: Resource) => {
+    return api.updateResource(resource);
+  },
+  (data: any, state: FetcherState<Array<Resource>>, action) => {
+    return [
+      ...(state.data?.filter((resource) => {
+        return resource.id !== action.payload.id;
+      }) ?? []),
+      data,
+    ];
+  },
+);

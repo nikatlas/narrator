@@ -4,6 +4,7 @@ import {
   Alert,
   Button,
   Card,
+  CardActions,
   CardContent,
   CardHeader,
   Typography,
@@ -11,14 +12,21 @@ import {
 import { useDeleteResource, useResources } from "@/resources/state/hooks";
 import NewResourceModal from "@/resources/newResourceModal";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import GroupIcon from "@mui/icons-material/Group";
+import EditResourceModal from "./editResourceModal";
 
 const Resources = () => {
+  const [editResource, setEditResource] = React.useState(null);
   const { data: resources, error } = useResources();
   const deleteResource = useDeleteResource();
 
   const handleDelete = (id: number) => {
     deleteResource(id);
   };
+
+  function handleEdit(resource: any) {
+    setEditResource(resource);
+  }
 
   return (
     <>
@@ -34,6 +42,12 @@ const Resources = () => {
         </Grid>
         <Grid>
           <NewResourceModal />
+          {editResource && (
+            <EditResourceModal
+              resource={editResource}
+              onClose={() => setEditResource(null)}
+            />
+          )}
         </Grid>
         {resources.map((resource: any) => (
           <Grid item key={resource.id}>
@@ -42,6 +56,15 @@ const Resources = () => {
               <CardContent>
                 <Typography>{resource.text}</Typography>
                 <Typography variant={"subtitle2"}>{resource.file}</Typography>
+              </CardContent>
+              <CardActions sx={{ justifyContent: "flex-end" }}>
+                <Button
+                  size="small"
+                  startIcon={<GroupIcon />}
+                  onClick={() => handleEdit(resource)}
+                >
+                  Edit
+                </Button>
                 <Button
                   color={"error"}
                   size="small"
@@ -50,7 +73,7 @@ const Resources = () => {
                 >
                   Delete
                 </Button>
-              </CardContent>
+              </CardActions>
             </Card>
           </Grid>
         ))}

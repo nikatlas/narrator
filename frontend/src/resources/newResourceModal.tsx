@@ -1,13 +1,22 @@
 import { Button } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
-import Modal from "@/modal/modal";
 import React from "react";
-import { useFormik } from "formik";
 import * as yup from "yup";
 import TextFieldForm from "@/form/textFieldForm";
 import TextareaForm from "@/form/textareaForm";
 import { useCreateResource, useResources } from "@/resources/state/hooks";
-import CreateModalForm from "@/modal/createModalForm";
+import CreateModalForm, { CreateModalFormProps } from "@/modal/createModalForm";
+
+export interface NewResourceModalProps
+  extends Omit<
+    CreateModalFormProps,
+    "loading" | "initialValues" | "onSubmit" | "validationSchema"
+  > {
+  loading?: boolean;
+  initialValues?: any;
+  onSubmit?: (values: any) => void;
+  validationSchema?: any;
+  submitButtonText?: string;
+}
 
 const validationSchema = yup.object({
   name: yup.string().required("Name is required"),
@@ -16,7 +25,10 @@ const validationSchema = yup.object({
 
 const initialValues = { name: "", text: "" };
 
-const NewResourceModal = () => {
+const NewResourceModal = ({
+  submitButtonText,
+  ...rest
+}: NewResourceModalProps) => {
   const { loading } = useResources();
   const createResource = useCreateResource();
 
@@ -28,6 +40,7 @@ const NewResourceModal = () => {
       onSubmit={createResource}
       validationSchema={validationSchema}
       triggerButtonText={"New resource"}
+      {...rest}
     >
       <TextFieldForm id={"name"} name={"name"} label={"Name"} fullWidth />
       <TextareaForm
@@ -37,7 +50,7 @@ const NewResourceModal = () => {
         fullWidth
         minRows={5}
       />
-      <Button type={"submit"}>Create</Button>
+      <Button type={"submit"}>{submitButtonText ?? "Create"}</Button>
     </CreateModalForm>
   );
 };
