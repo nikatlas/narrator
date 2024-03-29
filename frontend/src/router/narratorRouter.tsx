@@ -1,4 +1,4 @@
-import React, { FC, ReactNode } from "react";
+import React from "react";
 import { createBrowserRouter } from "react-router-dom";
 
 import { NarratorLayout } from "@/layout";
@@ -8,10 +8,23 @@ import "./router-object-augmentation";
 import { Campaigns } from "@/campaigns";
 import { Places } from "@/places";
 import { Resources } from "@/resources";
+import { store } from "@/redux/store";
+import { PlacesFetcher } from "@/places/state/thunk";
+import { ResourcesFetcher } from "@/resources/state/thunk";
+
+const dataLoader = () => {
+  const promises = [
+    store.dispatch(PlacesFetcher.action()),
+    store.dispatch(ResourcesFetcher.action()),
+  ];
+
+  return Promise.all(promises);
+};
 
 export const narratorRouter = createBrowserRouter([
   {
     path: "/",
+    loader: dataLoader,
     name: "Dashboard",
     element: <NarratorLayout />,
     children: [

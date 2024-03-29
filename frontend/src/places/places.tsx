@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import Grid from "@mui/material/Grid";
 import GroupIcon from "@mui/icons-material/Group";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
@@ -12,20 +12,11 @@ import {
   Typography,
 } from "@mui/material";
 import NewPlaceModal from "./newPlaceModal";
-import {
-  useDeletePlace,
-  useFetchPlaces,
-  usePlaces,
-} from "@/places/state/hooks";
+import { useDeletePlace, usePlaces } from "@/places/state/hooks";
 
 const Places = () => {
   const { data: places, error } = usePlaces();
-  const fetchPlaces = useFetchPlaces();
   const deletePlace = useDeletePlace();
-
-  useEffect(() => {
-    fetchPlaces();
-  }, []);
 
   const handleDelete = (id: number) => {
     deletePlace(id);

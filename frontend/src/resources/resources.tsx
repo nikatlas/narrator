@@ -1,7 +1,5 @@
-import { useEffect, useState } from "react";
+import React from "react";
 import Grid from "@mui/material/Grid";
-import AddIcon from "@mui/icons-material/Add";
-import NarratorAPI from "../api/NarratorAPI";
 import {
   Alert,
   Button,
@@ -10,22 +8,17 @@ import {
   CardHeader,
   Typography,
 } from "@mui/material";
+import { useDeleteResource, useResources } from "@/resources/state/hooks";
+import NewResourceModal from "@/resources/newResourceModal";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 
-const api = new NarratorAPI();
 const Resources = () => {
-  const [campaigns, setCampaigns] = useState<any[]>([]);
-  const [error, setError] = useState("");
+  const { data: resources, error } = useResources();
+  const deleteResource = useDeleteResource();
 
-  useEffect(() => {
-    api
-      .getCampaigns()
-      .then((response: any) => {
-        setCampaigns(response);
-      })
-      .catch((error) => {
-        setError(error.message);
-      });
-  }, []);
+  const handleDelete = (id: number) => {
+    deleteResource(id);
+  };
 
   return (
     <>
@@ -40,17 +33,24 @@ const Resources = () => {
           <Typography variant={"h4"}>Resources</Typography>
         </Grid>
         <Grid>
-          <Button variant="outlined" startIcon={<AddIcon />}>
-            New resource
-          </Button>
+          <NewResourceModal />
         </Grid>
-        {campaigns.map((campaign: any) => (
-          <Grid item key={campaign.id}>
+        {resources.map((resource: any) => (
+          <Grid item key={resource.id}>
             <Card sx={{}}>
-              <CardHeader
-                title={`${campaign.first_name} ${campaign.last_name}`}
-              />
-              <CardContent>{campaign.is_player ? "Player" : "NPC"}</CardContent>
+              <CardHeader title={`${resource.name}`} />
+              <CardContent>
+                <Typography>{resource.text}</Typography>
+                <Typography variant={"subtitle2"}>{resource.file}</Typography>
+                <Button
+                  color={"error"}
+                  size="small"
+                  startIcon={<DeleteForeverIcon />}
+                  onClick={() => handleDelete(resource.id)}
+                >
+                  Delete
+                </Button>
+              </CardContent>
             </Card>
           </Grid>
         ))}

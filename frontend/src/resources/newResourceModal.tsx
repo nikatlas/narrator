@@ -1,36 +1,39 @@
 import { Button } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
+import Modal from "@/modal/modal";
 import React from "react";
+import { useFormik } from "formik";
 import * as yup from "yup";
 import TextFieldForm from "@/form/textFieldForm";
 import TextareaForm from "@/form/textareaForm";
-import { useCreatePlace, usePlaces } from "@/places/state/hooks";
+import { useCreateResource, useResources } from "@/resources/state/hooks";
 import CreateModalForm from "@/modal/createModalForm";
 
 const validationSchema = yup.object({
   name: yup.string().required("Name is required"),
-  description: yup.string().required("Description is required"),
+  text: yup.string().required("Text is required"),
 });
 
-const initialValues = { name: "", description: "" };
+const initialValues = { name: "", text: "" };
 
-const NewPlaceModal = () => {
-  const createPlace = useCreatePlace();
-  const { loading } = usePlaces();
+const NewResourceModal = () => {
+  const { loading } = useResources();
+  const createResource = useCreateResource();
 
   return (
     <CreateModalForm
-      title={`New place`}
-      triggerButtonText={"New place"}
+      title={`New resource`}
       loading={loading}
       initialValues={initialValues}
+      onSubmit={createResource}
       validationSchema={validationSchema}
-      onSubmit={createPlace}
+      triggerButtonText={"New resource"}
     >
       <TextFieldForm id={"name"} name={"name"} label={"Name"} fullWidth />
       <TextareaForm
-        id={"description"}
-        name={"description"}
-        placeholder={"Description"}
+        id={"text"}
+        name={"text"}
+        placeholder={"Text"}
         fullWidth
         minRows={5}
       />
@@ -39,4 +42,4 @@ const NewPlaceModal = () => {
   );
 };
 
-export default NewPlaceModal;
+export default NewResourceModal;

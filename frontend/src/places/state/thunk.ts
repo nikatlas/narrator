@@ -1,6 +1,6 @@
 import Fetcher, { FetcherState } from "@/redux/fetcher";
 import NarratorAPI from "@/api/NarratorAPI";
-import { Place } from "@/types";
+import { Place } from "@/places/types";
 
 const api = new NarratorAPI();
 

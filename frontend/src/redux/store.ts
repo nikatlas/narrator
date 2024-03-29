@@ -1,5 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import placesReducer from "@/places/state/reducer";
+import resourcesReducer from "@/resources/state/reducer";
 
 import logger from "redux-logger";
 
@@ -8,6 +9,7 @@ export const store = configureStore({
     // campaigns: campaignsReducer,
     // characters: charactersReducer,
     places: placesReducer,
+    resources: resourcesReducer,
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger),
 });

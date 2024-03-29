@@ -5,7 +5,7 @@ import {
   PlacesDeleteFetcher,
   PlacesFetcher,
 } from "@/places/state/thunk";
-import { NewPlace } from "@/types";
+import { NewPlace } from "@/places/types";
 
 export const selectPlaces = (state: any) => state.places;
 

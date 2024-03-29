@@ -16,7 +16,7 @@ const defaultStyle = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: 400,
+  width: 600,
   bgcolor: "background.paper",
   border: "1px solid #ccc",
   boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2)",

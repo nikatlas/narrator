@@ -1,6 +1,13 @@
-import { styled, TextareaAutosize, TextareaAutosizeProps } from "@mui/material";
+import {
+  styled,
+  TextareaAutosize,
+  TextareaAutosizeProps,
+  TextField,
+  TextFieldProps,
+} from "@mui/material";
 import React from "react";
-import { FormikProps } from "formik";
+import { useFormikContext } from "formik";
+import TextFieldForm, { TextFieldFormProps } from "@/form/textFieldForm";
 
 const StyledTextareaAutosize = styled(TextareaAutosize)<TextareaAutosizeProps>(
   ({ theme }) => ({
@@ -29,32 +36,28 @@ const StyledTextareaAutosize = styled(TextareaAutosize)<TextareaAutosizeProps>(
   }),
 );
 
-type TextareaAutosizeFormProps<T> = {
-  form: FormikProps<T>;
-  id: string;
-} & Omit<TextareaAutosizeProps, "id" | "form">;
+type TextareaFormProps<T> = TextareaAutosizeProps & TextFieldFormProps<T>;
 
-const TextareaAutosizeForm = <T,>({
-  form,
+const TextareaForm = <T,>({
   id,
   name,
   placeholder,
+  minRows,
+  maxRows,
   ...rest
-}: TextareaAutosizeFormProps<T>) => (
-  <StyledTextareaAutosize
-    id={id}
-    name={name}
-    placeholder={placeholder}
-    // @ts-ignore
-    value={form.values[id]}
-    onChange={form.handleChange}
-    onBlur={form.handleBlur}
-    // @ts-ignore
-    error={form.touched[id] && Boolean(form.errors[id])}
-    // @ts-ignore
-    helperText={form.touched[id] && form.errors[id]}
-    {...rest}
-  />
-);
+}: TextareaFormProps<T>) => {
+  return (
+    <TextFieldForm
+      id={id}
+      name={name}
+      placeholder={placeholder}
+      {...rest}
+      InputProps={{
+        inputComponent: TextareaAutosize,
+        inputProps: { minRows, maxRows },
+      }}
+    />
+  );
+};
 
-export default TextareaAutosizeForm;
+export default TextareaForm;
