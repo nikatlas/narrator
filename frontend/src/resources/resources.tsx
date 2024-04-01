@@ -49,9 +49,11 @@ const Resources = () => {
             />
           )}
         </Grid>
+      </Grid>
+      <Grid container spacing={2} justifyContent={"center"}>
         {resources.map((resource: any) => (
           <Grid item key={resource.id}>
-            <Card sx={{}}>
+            <Card sx={{ maxWidth: 300 }}>
               <CardHeader title={`${resource.name}`} />
               <CardContent>
                 <Typography>{resource.text}</Typography>
