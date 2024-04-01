@@ -6,11 +6,11 @@ import { Chat } from "@/chat";
 import { Characters } from "@/characters";
 import "./router-object-augmentation";
 import { Campaigns } from "@/campaigns";
-import { Places } from "@/places";
-import { Resources } from "@/resources";
 import { store } from "@/redux/store";
 import { PlacesFetcher } from "@/places/state/thunk";
 import { ResourcesFetcher } from "@/resources/state/thunk";
+import { PlacesPage, ResourcesPage } from "@/pages";
+import PlacesDetailPage from "@/pages/placesDetails";
 
 const dataLoader = () => {
   const promises = [
@@ -39,14 +39,24 @@ export const narratorRouter = createBrowserRouter([
         element: <Characters />,
       },
       {
-        name: "Places",
         path: "places",
-        element: <Places />,
+        children: [
+          {
+            index: true,
+            name: "Places",
+            element: <PlacesPage />,
+          },
+          {
+            name: "Place Details",
+            path: ":placeId",
+            element: <PlacesDetailPage />,
+          },
+        ],
       },
       {
         name: "Resources",
         path: "resources",
-        element: <Resources />,
+        element: <ResourcesPage />,
       },
       {
         name: "Chat",

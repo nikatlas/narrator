@@ -5,6 +5,7 @@ import TextFieldForm from "@/form/textFieldForm";
 import TextareaForm from "@/form/textareaForm";
 import { useCreateResource, useResources } from "@/resources/state/hooks";
 import CreateModalForm, { CreateModalFormProps } from "@/modal/createModalForm";
+import { Resource } from "@/resources/types";
 
 export interface NewResourceModalProps
   extends Omit<
@@ -16,6 +17,7 @@ export interface NewResourceModalProps
   onSubmit?: (values: any) => void;
   validationSchema?: any;
   submitButtonText?: string;
+  onNewResource?: (resource: Resource) => void;
 }
 
 const validationSchema = yup.object({
@@ -26,6 +28,7 @@ const validationSchema = yup.object({
 const initialValues = { name: "", text: "" };
 
 const NewResourceModal = ({
+  onNewResource,
   submitButtonText,
   ...rest
 }: NewResourceModalProps) => {
@@ -37,7 +40,12 @@ const NewResourceModal = ({
       title={`New resource`}
       loading={loading}
       initialValues={initialValues}
-      onSubmit={createResource}
+      onSubmit={async (resource) => {
+        const newResource = createResource(resource);
+        if (onNewResource) {
+          onNewResource((await newResource).payload.data as Resource);
+        }
+      }}
       validationSchema={validationSchema}
       triggerButtonText={"New resource"}
       {...rest}

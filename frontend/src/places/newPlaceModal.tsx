@@ -4,7 +4,21 @@ import * as yup from "yup";
 import TextFieldForm from "@/form/textFieldForm";
 import TextareaForm from "@/form/textareaForm";
 import { useCreatePlace, usePlaces } from "@/places/state/hooks";
-import CreateModalForm from "@/modal/createModalForm";
+import CreateModalForm, { CreateModalFormProps } from "@/modal/createModalForm";
+import { Place } from "@/places/types";
+
+export interface NewPlaceModalProps
+  extends Omit<
+    CreateModalFormProps,
+    "loading" | "initialValues" | "onSubmit" | "validationSchema"
+  > {
+  loading?: boolean;
+  initialValues?: any;
+  onSubmit?: (values: any) => void;
+  validationSchema?: any;
+  submitButtonText?: string;
+  onNewPlace?: (place: Place) => void;
+}
 
 const validationSchema = yup.object({
   name: yup.string().required("Name is required"),
@@ -13,7 +27,11 @@ const validationSchema = yup.object({
 
 const initialValues = { name: "", description: "" };
 
-const NewPlaceModal = () => {
+const NewPlaceModal = ({
+  onNewPlace,
+  submitButtonText,
+  ...rest
+}: NewPlaceModalProps) => {
   const createPlace = useCreatePlace();
   const { loading } = usePlaces();
 
@@ -24,7 +42,13 @@ const NewPlaceModal = () => {
       loading={loading}
       initialValues={initialValues}
       validationSchema={validationSchema}
-      onSubmit={createPlace}
+      onSubmit={async (place) => {
+        const newPlace = createPlace(place);
+        if (onNewPlace) {
+          onNewPlace((await newPlace).payload.data as Place);
+        }
+      }}
+      {...rest}
     >
       <TextFieldForm id={"name"} name={"name"} label={"Name"} fullWidth />
       <TextareaForm
@@ -34,7 +58,7 @@ const NewPlaceModal = () => {
         fullWidth
         minRows={5}
       />
-      <Button type={"submit"}>Create</Button>
+      <Button type={"submit"}>{submitButtonText ?? "Create"}</Button>
     </CreateModalForm>
   );
 };

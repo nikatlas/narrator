@@ -9,15 +9,28 @@ import {
   CardHeader,
   Typography,
 } from "@mui/material";
-import { useDeleteResource, useResources } from "@/resources/state/hooks";
+import { useDeleteResource } from "@/resources/state/hooks";
 import NewResourceModal from "@/resources/newResourceModal";
+import LinkOffIcon from "@mui/icons-material/LinkOff";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import GroupIcon from "@mui/icons-material/Group";
 import EditResourceModal from "./editResourceModal";
+import { Resource } from "@/resources/types";
 
-const Resources = () => {
+interface ResourcesProps {
+  resources: Resource[];
+  error: any;
+  onUnlink?: (id: number) => void;
+  onNewResource?: (resource: Resource) => void;
+}
+
+const Resources = ({
+  resources,
+  error,
+  onUnlink,
+  onNewResource,
+}: ResourcesProps) => {
   const [editResource, setEditResource] = React.useState(null);
-  const { data: resources, error } = useResources();
   const deleteResource = useDeleteResource();
 
   const handleDelete = (id: number) => {
@@ -41,7 +54,7 @@ const Resources = () => {
           <Typography variant={"h4"}>Resources</Typography>
         </Grid>
         <Grid>
-          <NewResourceModal />
+          <NewResourceModal onNewResource={onNewResource} />
           {editResource && (
             <EditResourceModal
               resource={editResource}
@@ -67,6 +80,16 @@ const Resources = () => {
                 >
                   Edit
                 </Button>
+                {onUnlink && (
+                  <Button
+                    color={"error"}
+                    size="small"
+                    startIcon={<LinkOffIcon />}
+                    onClick={() => onUnlink(resource.id)}
+                  >
+                    Unlink
+                  </Button>
+                )}
                 <Button
                   color={"error"}
                   size="small"

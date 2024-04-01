@@ -27,6 +27,10 @@ class NarratorAPI extends HttpAPI {
     return this.delete(`place/${id}/`);
   }
 
+  updatePlace(place: Place) {
+    return this.put(`place/${place.id}/`, place);
+  }
+
   getCharacters() {
     return this.get("character/");
   }

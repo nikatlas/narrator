@@ -3,6 +3,7 @@ import {
   PlacesCreateFetcher,
   PlacesDeleteFetcher,
   PlacesFetcher,
+  PlacesUpdateFetcher,
 } from "@/places/state/thunk";
 import { fetcherInitialState } from "@/redux/fetcher";
 
@@ -18,6 +19,7 @@ export const placesSlice = createSlice({
     PlacesFetcher.reducers(builder);
     PlacesCreateFetcher.reducers(builder);
     PlacesDeleteFetcher.reducers(builder);
+    PlacesUpdateFetcher.reducers(builder);
   },
 });
 

@@ -7,10 +7,18 @@ import {
   ResourcesUpdateFetcher,
 } from "@/resources/state/thunk";
 import { NewResource, Resource } from "@/resources/types";
+import { createSelector } from "@reduxjs/toolkit";
 
 export const selectResources = (state: any) => {
   return state.resources;
 };
+
+export const selectResourcesByIds = createSelector(
+  (state: any) => selectResources(state).data,
+  (_: any, resourceIds: Array<number>) => resourceIds,
+  (resources: Array<Resource>, resourceIds: Array<number>) =>
+    resources.filter((resource: Resource) => resourceIds.includes(resource.id)),
+);
 
 export const useResources = () => {
   const { data, ...rest } = useAppSelector(selectResources);
@@ -23,9 +31,8 @@ export const useResources = () => {
 export const useCreateResource = () => {
   const dispatch = useAppDispatch();
   return useCallback(
-    (payload: NewResource) => {
-      dispatch(ResourcesCreateFetcher.action(payload));
-    },
+    async (payload: NewResource) =>
+      dispatch(ResourcesCreateFetcher.action(payload)),
     [dispatch],
   );
 };

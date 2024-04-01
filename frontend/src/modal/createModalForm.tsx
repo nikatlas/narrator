@@ -20,6 +20,7 @@ const CreateModalForm = ({
   validationSchema,
   children,
   triggerButtonText,
+  isOpen: externalIsOpen,
   ...rest
 }: CreateModalFormProps) => {
   const [isOpen, setIsOpen] = React.useState(false);
@@ -40,7 +41,7 @@ const CreateModalForm = ({
 
   return (
     <Modal
-      isOpen={isOpen}
+      isOpen={externalIsOpen !== undefined ? externalIsOpen : isOpen}
       onClose={() => setIsOpen(false)}
       externalControl
       triggerButtonComponent={defaultTriggerButtonComponent}

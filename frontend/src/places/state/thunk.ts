@@ -1,6 +1,7 @@
 import Fetcher, { FetcherState } from "@/redux/fetcher";
 import NarratorAPI from "@/api/NarratorAPI";
 import { Place } from "@/places/types";
+import { Resource } from "@/resources/types";
 
 const api = new NarratorAPI();
 
@@ -27,5 +28,20 @@ export const PlacesDeleteFetcher = new Fetcher(
     return state.data?.filter((place) => {
       return place.id !== action.payload;
     });
+  },
+);
+
+export const PlacesUpdateFetcher = new Fetcher(
+  "places/update",
+  async (place: Place) => {
+    return api.updatePlace(place);
+  },
+  (data: any, state: FetcherState<Array<Place>>, action) => {
+    return [
+      ...(state.data?.filter((place) => {
+        return place.id !== action.payload.id;
+      }) ?? []),
+      data,
+    ];
   },
 );

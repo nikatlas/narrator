@@ -12,15 +12,19 @@ import {
   Typography,
 } from "@mui/material";
 import NewPlaceModal from "./newPlaceModal";
-import { useDeletePlace, usePlaces } from "@/places/state/hooks";
+import { useDeletePlace } from "@/places/state/hooks";
+import { Place } from "@/places/types";
+import { Link } from "react-router-dom";
+import EditPlaceModal from "./editPlaceModal";
 
-const Places = () => {
-  const { data: places, error } = usePlaces();
+interface PlacesProps {
+  places: Place[];
+  error: any;
+}
+
+const Places = ({ places, error }: PlacesProps) => {
+  const [editPlace, setEditPlace] = React.useState<Place | null>(null);
   const deletePlace = useDeletePlace();
-
-  const handleDelete = (id: number) => {
-    deletePlace(id);
-  };
 
   return (
     <>
@@ -36,26 +40,38 @@ const Places = () => {
         </Grid>
         <Grid item xs={12} textAlign={"right"}>
           <NewPlaceModal />
+          {editPlace && (
+            <EditPlaceModal
+              place={editPlace}
+              onClose={() => setEditPlace(null)}
+            />
+          )}
         </Grid>
         {places.map((place: any) => (
           <Grid item key={place.id}>
-            <Card sx={{}}>
-              <CardHeader title={place.name} />
-              <CardContent>{place.description}</CardContent>
-              <CardActions sx={{ justifyContent: "flex-end" }}>
-                <Button size="small" startIcon={<GroupIcon />}>
-                  Edit
-                </Button>
-                <Button
-                  color={"error"}
-                  size="small"
-                  startIcon={<DeleteForeverIcon />}
-                  onClick={() => handleDelete(place.id)}
-                >
-                  Delete
-                </Button>
-              </CardActions>
-            </Card>
+            <Link to={`${place.id}`}>
+              <Card sx={{}}>
+                <CardHeader title={place.name} />
+                <CardContent>{place.description}</CardContent>
+                <CardActions sx={{ justifyContent: "flex-end" }}>
+                  <Button
+                    size="small"
+                    startIcon={<GroupIcon />}
+                    onClick={() => setEditPlace(place)}
+                  >
+                    Edit
+                  </Button>
+                  <Button
+                    color={"error"}
+                    size="small"
+                    startIcon={<DeleteForeverIcon />}
+                    onClick={() => deletePlace(place.id)}
+                  >
+                    Delete
+                  </Button>
+                </CardActions>
+              </Card>
+            </Link>
           </Grid>
         ))}
       </Grid>

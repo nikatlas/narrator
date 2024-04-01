@@ -17,6 +17,7 @@ class Place(models.Model):
 
     name = models.CharField(max_length=255)
     description = models.TextField()
+    resources = models.ManyToManyField("Resource", related_name="places", blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
