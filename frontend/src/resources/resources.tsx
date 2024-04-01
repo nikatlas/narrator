@@ -7,6 +7,7 @@ import {
   CardActions,
   CardContent,
   CardHeader,
+  TextField,
   Typography,
 } from "@mui/material";
 import { useDeleteResource } from "@/resources/state/hooks";
@@ -18,6 +19,7 @@ import EditResourceModal from "./editResourceModal";
 import { Resource } from "@/resources/types";
 
 interface ResourcesProps {
+  title?: string;
   resources: Resource[];
   error: any;
   onUnlink?: (id: number) => void;
@@ -25,11 +27,13 @@ interface ResourcesProps {
 }
 
 const Resources = ({
+  title,
   resources,
   error,
   onUnlink,
   onNewResource,
 }: ResourcesProps) => {
+  const [search, setSearch] = React.useState("");
   const [editResource, setEditResource] = React.useState(null);
   const deleteResource = useDeleteResource();
 
@@ -50,9 +54,11 @@ const Resources = ({
       </Grid>
 
       <Grid container spacing={2} justifyContent={"center"}>
-        <Grid item xs={12} textAlign={"center"} sx={{ p: 2 }}>
-          <Typography variant={"h4"}>Resources</Typography>
-        </Grid>
+        {title && (
+          <Grid item xs={12} textAlign={"center"} sx={{ p: 2 }}>
+            <Typography variant={"h4"}>{title}</Typography>
+          </Grid>
+        )}
         <Grid>
           <NewResourceModal onNewResource={onNewResource} />
           {editResource && (

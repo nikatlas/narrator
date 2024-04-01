@@ -29,9 +29,12 @@ export const useCharacter = (characterId: number) => {
   return useAppSelector((state) => selectCharacter(state, characterId));
 };
 
-export const useCharactersResources = (character: Character) => {
+export const useCharactersResources = (
+  character: Character,
+  search?: string,
+) => {
   return useAppSelector((state) =>
-    selectResourcesByIds(state, character.resources ?? []),
+    selectResourcesByIds(state, character.resources ?? [], search),
   );
 };
 

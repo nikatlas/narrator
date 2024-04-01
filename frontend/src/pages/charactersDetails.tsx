@@ -8,12 +8,18 @@ import { Navigate, useParams } from "react-router-dom";
 import { Resources } from "@/resources";
 import { Bucket, BucketContainer } from "@/sections/bucketSection";
 import Character from "@/characters/character";
+import Grid from "@mui/material/Grid";
+import { TextField } from "@mui/material";
+import React from "react";
+import { useFilteredResources } from "@/resources/state/hooks";
 
 const CharactersDetailPage = () => {
   const { characterId } = useParams();
   const characterIdInt = parseInt(characterId as string);
   const character = useCharacter(characterIdInt) as ICharacter;
-  const characterResources = useCharactersResources(character);
+  const [search, setSearch] = React.useState("");
+  const characterResources = useCharactersResources(character, search);
+  const resources = useFilteredResources(undefined, search);
   const editCharacter = useUpdateCharacters();
 
   const handleUnlink = (id: number) => {
@@ -36,19 +42,40 @@ const CharactersDetailPage = () => {
 
   return (
     <BucketContainer isVertical={false}>
-      <Bucket xs={6}>
+      <Bucket xs={12} sm={4} md={3}>
         <Character
           character={character as ICharacter}
           onSubmit={(values) => editCharacter(values)}
         />
       </Bucket>
-      <Bucket item xs={6}>
-        <Resources
-          resources={characterResources}
-          error={null}
-          onUnlink={handleUnlink}
-          onNewResource={handleNewResource}
-        />
+      <Bucket item xs={12} sm={8} md={9}>
+        <BucketContainer isVertical>
+          <Bucket mt={{ t: 2 }}>
+            <TextField
+              fullWidth
+              label={"Search"}
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </Bucket>
+          <Bucket>
+            <Resources
+              title={"Character resources"}
+              resources={characterResources}
+              error={null}
+              onUnlink={handleUnlink}
+              onNewResource={handleNewResource}
+            />
+          </Bucket>
+          <Bucket>
+            <Resources
+              title={"All resources"}
+              resources={resources}
+              error={null}
+              onUnlink={handleUnlink}
+            />
+          </Bucket>
+        </BucketContainer>
       </Bucket>
     </BucketContainer>
   );

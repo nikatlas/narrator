@@ -17,10 +17,37 @@ export const selectResources = (state: any) => {
 
 export const selectResourcesByIds = createSelector(
   (state: any) => selectResources(state).data,
-  (_: any, resourceIds: Array<number>) => resourceIds,
-  (resources: Array<Resource>, resourceIds: Array<number>) =>
-    resources.filter((resource: Resource) => resourceIds.includes(resource.id)),
+  (_: any, resourceIds?: Array<number>) => resourceIds,
+  (_: any, _2: any, searchTerm?: string) => searchTerm,
+  (
+    resources: Array<Resource>,
+    resourceIds?: Array<number>,
+    searchTerm?: string,
+  ) => {
+    const filteredResources = resourceIds
+      ? resources.filter((resource: Resource) =>
+          resourceIds.includes(resource.id),
+        )
+      : resources;
+    if (!searchTerm) {
+      return filteredResources;
+    }
+    return filteredResources.filter(
+      (resource: Resource) =>
+        resource.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        resource.text?.toLowerCase().includes(searchTerm.toLowerCase()),
+    );
+  },
 );
+
+export const useFilteredResources = (
+  resourceIds?: Array<number>,
+  search?: string,
+) => {
+  return useAppSelector((state) =>
+    selectResourcesByIds(state, resourceIds, search),
+  );
+};
 
 export const useResources = () => {
   const { data, ...rest } = useAppSelector(selectResources);
