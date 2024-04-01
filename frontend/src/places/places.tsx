@@ -49,7 +49,7 @@ const Places = ({ places, error }: PlacesProps) => {
         </Grid>
         {places.map((place: any) => (
           <Grid item key={place.id}>
-            <Link to={`${place.id}`}>
+            <Link to={`${place.id}`} style={{ textDecoration: "none" }}>
               <Card sx={{}}>
                 <CardHeader title={place.name} />
                 <CardContent>{place.description}</CardContent>

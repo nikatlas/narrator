@@ -9,6 +9,10 @@ import { Navigate, useParams } from "react-router-dom";
 import { Grid } from "@mui/material";
 import { Resources } from "@/resources";
 import EditPlaceModal from "@/places/editPlaceModal";
+import BucketSection, {
+  Bucket,
+  BucketContainer,
+} from "@/sections/bucketSection";
 
 const PlacesDetailPage = () => {
   const { placeId } = useParams();
@@ -36,20 +40,20 @@ const PlacesDetailPage = () => {
   }
 
   return (
-    <Grid container>
-      <Grid item xs={6}>
+    <BucketContainer isVertical={false}>
+      <Bucket xs={6}>
         <Place place={place as IPlace} />
         <EditPlaceModal place={place} showTriggerButton />
-      </Grid>
-      <Grid item xs={6}>
+      </Bucket>
+      <Bucket item xs={6}>
         <Resources
           resources={placeResources}
           error={null}
           onUnlink={handleUnlink}
           onNewResource={handleNewResource}
         />
-      </Grid>
-    </Grid>
+      </Bucket>
+    </BucketContainer>
   );
 };
 
