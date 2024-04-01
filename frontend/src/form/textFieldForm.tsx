@@ -3,7 +3,7 @@ import React from "react";
 import { FormikProps, useFormik, useFormikContext } from "formik";
 
 export type TextFieldFormProps<T> = {
-  id: string;
+  id?: string;
 } & Omit<TextFieldProps, "id">;
 
 const TextFieldForm = <T,>({
@@ -17,8 +17,9 @@ const TextFieldForm = <T,>({
 
   return (
     <TextField
+      sx={{ mt: 2 }}
       id={id}
-      name={name}
+      name={name ?? id}
       label={label}
       // @ts-ignore
       value={values[id]}

@@ -8,6 +8,8 @@ import {
 } from "@/resources/state/thunk";
 import { NewResource, Resource } from "@/resources/types";
 import { createSelector } from "@reduxjs/toolkit";
+import toast from "react-hot-toast";
+import { PlacesCreateFetcher } from "@/places/state/thunk";
 
 export const selectResources = (state: any) => {
   return state.resources;
@@ -32,7 +34,11 @@ export const useCreateResource = () => {
   const dispatch = useAppDispatch();
   return useCallback(
     async (payload: NewResource) =>
-      dispatch(ResourcesCreateFetcher.action(payload)),
+      toast.promise(dispatch(ResourcesCreateFetcher.action(payload)), {
+        loading: "Saving...",
+        success: <b>Resource created!</b>,
+        error: <b>{"Could not save resource :("}</b>,
+      }),
     [dispatch],
   );
 };
@@ -40,8 +46,12 @@ export const useCreateResource = () => {
 export const useDeleteResource = () => {
   const dispatch = useAppDispatch();
   return useCallback(
-    (id: number) => {
-      dispatch(ResourcesDeleteFetcher.action(id));
+    async (id: number) => {
+      return toast.promise(dispatch(ResourcesDeleteFetcher.action(id)), {
+        loading: "Deleting resource...",
+        success: <b>Resource deleted!</b>,
+        error: <b>{"Could not delete resource :("}</b>,
+      });
     },
     [dispatch],
   );
@@ -64,7 +74,11 @@ export const useUpdateResources = () => {
     (resource: Resource) => {
       const { file, ...rest } = resource;
       if (!loading) {
-        dispatch(ResourcesUpdateFetcher.action(rest));
+        return toast.promise(dispatch(ResourcesUpdateFetcher.action(rest)), {
+          loading: "Saving resource...",
+          success: <b>Resource saved!</b>,
+          error: <b>{"Could not save resource :("}</b>,
+        });
       }
     },
     [dispatch, loading],

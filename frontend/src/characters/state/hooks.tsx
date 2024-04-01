@@ -10,6 +10,7 @@ import { NewCharacter, Character } from "@/characters/types";
 import { createSelector } from "@reduxjs/toolkit";
 import { selectResources, selectResourcesByIds } from "@/resources/state/hooks";
 import { Resource } from "@/resources/types";
+import toast from "react-hot-toast";
 
 export const selectCharacters = (state: any) => state.characters;
 
@@ -38,7 +39,11 @@ export const useCreateCharacters = () => {
   const dispatch = useAppDispatch();
   return useCallback(
     async (payload: NewCharacter) =>
-      dispatch(CharactersCreateFetcher.action(payload)),
+      toast.promise(dispatch(CharactersCreateFetcher.action(payload)), {
+        loading: "Saving...",
+        success: <b>Character saved!</b>,
+        error: <b>{"Could not save character :("}</b>,
+      }),
     [dispatch],
   );
 };
@@ -46,8 +51,12 @@ export const useCreateCharacters = () => {
 export const useDeleteCharacters = () => {
   const dispatch = useAppDispatch();
   return useCallback(
-    (id: number) => {
-      dispatch(CharactersDeleteFetcher.action(id));
+    async (id: number) => {
+      return toast.promise(dispatch(CharactersDeleteFetcher.action(id)), {
+        loading: "Deleting character...",
+        success: <b>Character deleted!</b>,
+        error: <b>{"Could not delete character :("}</b>,
+      });
     },
     [dispatch],
   );
@@ -66,8 +75,12 @@ export const useFetchCharacters = () => {
 export const useUpdateCharacters = () => {
   const dispatch = useAppDispatch();
   return useCallback(
-    (payload: Character) => {
-      dispatch(CharactersUpdateFetcher.action(payload));
+    async (payload: Character) => {
+      return toast.promise(dispatch(CharactersUpdateFetcher.action(payload)), {
+        loading: "Saving...",
+        success: <b>Character saved!</b>,
+        error: <b>{"Could not save character :("}</b>,
+      });
     },
     [dispatch],
   );

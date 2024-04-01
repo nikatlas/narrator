@@ -10,6 +10,8 @@ import { NewPlace, Place } from "@/places/types";
 import { createSelector } from "@reduxjs/toolkit";
 import { selectResources, selectResourcesByIds } from "@/resources/state/hooks";
 import { Resource } from "@/resources/types";
+import toast from "react-hot-toast";
+import { CharactersCreateFetcher } from "@/characters/state/thunk";
 
 export const selectPlaces = (state: any) => state.places;
 
@@ -37,7 +39,12 @@ export const usePlaceResources = (place: Place) => {
 export const useCreatePlace = () => {
   const dispatch = useAppDispatch();
   return useCallback(
-    async (payload: NewPlace) => dispatch(PlacesCreateFetcher.action(payload)),
+    async (payload: NewPlace) =>
+      toast.promise(dispatch(PlacesCreateFetcher.action(payload)), {
+        loading: "Saving...",
+        success: <b>Place created!</b>,
+        error: <b>{"Could not save place :("}</b>,
+      }),
     [dispatch],
   );
 };
@@ -45,8 +52,12 @@ export const useCreatePlace = () => {
 export const useDeletePlace = () => {
   const dispatch = useAppDispatch();
   return useCallback(
-    (id: number) => {
-      dispatch(PlacesDeleteFetcher.action(id));
+    async (id: number) => {
+      return toast.promise(dispatch(PlacesDeleteFetcher.action(id)), {
+        loading: "Deleting...",
+        success: <b>Place deleted!</b>,
+        error: <b>{"Could not delete place :("}</b>,
+      });
     },
     [dispatch],
   );
@@ -65,8 +76,12 @@ export const useFetchPlaces = () => {
 export const useUpdatePlace = () => {
   const dispatch = useAppDispatch();
   return useCallback(
-    (payload: Place) => {
-      dispatch(PlacesUpdateFetcher.action(payload));
+    async (payload: Place) => {
+      return toast.promise(dispatch(PlacesUpdateFetcher.action(payload)), {
+        loading: "Saving...",
+        success: <b>Place saved!</b>,
+        error: <b>{"Could not save place :("}</b>,
+      });
     },
     [dispatch],
   );

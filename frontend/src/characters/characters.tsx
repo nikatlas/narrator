@@ -8,19 +8,26 @@ import {
   Typography,
 } from "@mui/material";
 import { Character } from "@/characters/types";
+import CharacterCard from "./characterCard";
 
 interface CharactersProps {
   title?: string;
   characters: Character[];
-  onSelect?: (character: Character) => void;
   selectedCharacters?: Character[];
+  onSelect?: (character: Character) => void;
+  onView?: (character: Character) => void;
+  onEdit?: (character: Character) => void;
+  onDelete?: (id: number) => void;
 }
 
 const Characters = ({
   title,
   characters,
-  onSelect,
   selectedCharacters,
+  onSelect,
+  onView,
+  onEdit,
+  onDelete,
 }: CharactersProps) => {
   return (
     <>
@@ -32,19 +39,14 @@ const Characters = ({
         )}
         {characters.map((character: any) => (
           <Grid item key={character.id}>
-            <Card
-              onClick={() => onSelect?.(character)}
-              sx={{
-                border: selectedCharacters?.includes(character)
-                  ? "1px solid black"
-                  : "",
-              }}
-            >
-              <CardHeader
-                title={`${character.firstName} ${character.lastName}`}
-              />
-              <CardContent>{character.isPlayer ? "Player" : "NPC"}</CardContent>
-            </Card>
+            <CharacterCard
+              character={character}
+              selected={selectedCharacters?.includes(character)}
+              onSelect={() => onSelect?.(character)}
+              onView={onView ? () => onView(character) : undefined}
+              onEdit={onEdit ? () => onEdit(character) : undefined}
+              onDelete={onDelete ? () => onDelete(character.id) : undefined}
+            />
           </Grid>
         ))}
       </Grid>
