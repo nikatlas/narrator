@@ -38,12 +38,15 @@ export const useCharactersResources = (character: Character) => {
 export const useCreateCharacters = () => {
   const dispatch = useAppDispatch();
   return useCallback(
-    async (payload: NewCharacter) =>
-      toast.promise(dispatch(CharactersCreateFetcher.action(payload)), {
+    async (payload: NewCharacter) => {
+      const action = dispatch(CharactersCreateFetcher.action(payload));
+      toast.promise(action, {
         loading: "Saving...",
         success: <b>Character saved!</b>,
         error: <b>{"Could not save character :("}</b>,
-      }),
+      });
+      return action;
+    },
     [dispatch],
   );
 };
@@ -52,11 +55,13 @@ export const useDeleteCharacters = () => {
   const dispatch = useAppDispatch();
   return useCallback(
     async (id: number) => {
-      return toast.promise(dispatch(CharactersDeleteFetcher.action(id)), {
+      const action = dispatch(CharactersDeleteFetcher.action(id));
+      toast.promise(action, {
         loading: "Deleting character...",
         success: <b>Character deleted!</b>,
         error: <b>{"Could not delete character :("}</b>,
       });
+      return action;
     },
     [dispatch],
   );
@@ -76,11 +81,13 @@ export const useUpdateCharacters = () => {
   const dispatch = useAppDispatch();
   return useCallback(
     async (payload: Character) => {
-      return toast.promise(dispatch(CharactersUpdateFetcher.action(payload)), {
+      const action = dispatch(CharactersUpdateFetcher.action(payload));
+      toast.promise(action, {
         loading: "Saving...",
         success: <b>Character saved!</b>,
         error: <b>{"Could not save character :("}</b>,
       });
+      return action;
     },
     [dispatch],
   );

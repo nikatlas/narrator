@@ -39,12 +39,15 @@ export const usePlaceResources = (place: Place) => {
 export const useCreatePlace = () => {
   const dispatch = useAppDispatch();
   return useCallback(
-    async (payload: NewPlace) =>
-      toast.promise(dispatch(PlacesCreateFetcher.action(payload)), {
+    async (payload: NewPlace) => {
+      const action = dispatch(PlacesCreateFetcher.action(payload));
+      toast.promise(action, {
         loading: "Saving...",
         success: <b>Place created!</b>,
         error: <b>{"Could not save place :("}</b>,
-      }),
+      });
+      return action;
+    },
     [dispatch],
   );
 };
@@ -53,11 +56,13 @@ export const useDeletePlace = () => {
   const dispatch = useAppDispatch();
   return useCallback(
     async (id: number) => {
-      return toast.promise(dispatch(PlacesDeleteFetcher.action(id)), {
+      const action = dispatch(PlacesDeleteFetcher.action(id));
+      toast.promise(action, {
         loading: "Deleting...",
         success: <b>Place deleted!</b>,
         error: <b>{"Could not delete place :("}</b>,
       });
+      return action;
     },
     [dispatch],
   );
@@ -77,11 +82,13 @@ export const useUpdatePlace = () => {
   const dispatch = useAppDispatch();
   return useCallback(
     async (payload: Place) => {
-      return toast.promise(dispatch(PlacesUpdateFetcher.action(payload)), {
+      const action = dispatch(PlacesUpdateFetcher.action(payload));
+      toast.promise(action, {
         loading: "Saving...",
         success: <b>Place saved!</b>,
         error: <b>{"Could not save place :("}</b>,
       });
+      return action;
     },
     [dispatch],
   );

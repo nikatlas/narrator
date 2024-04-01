@@ -33,12 +33,15 @@ export const useResources = () => {
 export const useCreateResource = () => {
   const dispatch = useAppDispatch();
   return useCallback(
-    async (payload: NewResource) =>
-      toast.promise(dispatch(ResourcesCreateFetcher.action(payload)), {
+    async (payload: NewResource) => {
+      const action = dispatch(ResourcesCreateFetcher.action(payload));
+      toast.promise(action, {
         loading: "Saving...",
         success: <b>Resource created!</b>,
         error: <b>{"Could not save resource :("}</b>,
-      }),
+      });
+      return action;
+    },
     [dispatch],
   );
 };
@@ -47,11 +50,13 @@ export const useDeleteResource = () => {
   const dispatch = useAppDispatch();
   return useCallback(
     async (id: number) => {
-      return toast.promise(dispatch(ResourcesDeleteFetcher.action(id)), {
+      const action = dispatch(ResourcesDeleteFetcher.action(id));
+      toast.promise(action, {
         loading: "Deleting resource...",
         success: <b>Resource deleted!</b>,
         error: <b>{"Could not delete resource :("}</b>,
       });
+      return action;
     },
     [dispatch],
   );
@@ -74,11 +79,13 @@ export const useUpdateResources = () => {
     (resource: Resource) => {
       const { file, ...rest } = resource;
       if (!loading) {
-        return toast.promise(dispatch(ResourcesUpdateFetcher.action(rest)), {
+        const promise = dispatch(ResourcesUpdateFetcher.action(rest));
+        toast.promise(promise, {
           loading: "Saving resource...",
           success: <b>Resource saved!</b>,
           error: <b>{"Could not save resource :("}</b>,
         });
+        return promise;
       }
     },
     [dispatch, loading],
