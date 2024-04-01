@@ -1,72 +1,73 @@
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useCallback } from "react";
 import {
-  PlacesCreateFetcher,
-  PlacesDeleteFetcher,
-  PlacesFetcher,
-  PlacesUpdateFetcher,
-} from "@/places/state/thunk";
-import { NewPlace, Place } from "@/places/types";
+  CharactersCreateFetcher,
+  CharactersDeleteFetcher,
+  CharactersFetcher,
+  CharactersUpdateFetcher,
+} from "@/characters/state/thunk";
+import { NewCharacter, Character } from "@/characters/types";
 import { createSelector } from "@reduxjs/toolkit";
 import { selectResources, selectResourcesByIds } from "@/resources/state/hooks";
 import { Resource } from "@/resources/types";
 
-export const selectPlaces = (state: any) => state.places;
+export const selectCharacters = (state: any) => state.characters;
 
-export const selectPlace = createSelector(
-  (state: any) => selectPlaces(state).data,
-  (_: any, placeId: number) => placeId,
-  (places: Array<Place>, placeId: number) =>
-    places?.find((place: Place) => place.id === placeId),
+export const selectCharacter = createSelector(
+  (state: any) => selectCharacters(state).data,
+  (_: any, characterId: number) => characterId,
+  (characters: Array<Character>, characterId: number) =>
+    characters?.find((character: Character) => character.id === characterId),
 );
 
-export const usePlaces = () => {
-  return useAppSelector(selectPlaces);
+export const useCharacters = () => {
+  return useAppSelector(selectCharacters);
 };
 
-export const usePlace = (placeId: number) => {
-  return useAppSelector((state) => selectPlace(state, placeId));
+export const useCharacter = (characterId: number) => {
+  return useAppSelector((state) => selectCharacter(state, characterId));
 };
 
-export const usePlaceResources = (place: Place) => {
+export const useCharactersResources = (character: Character) => {
   return useAppSelector((state) =>
-    selectResourcesByIds(state, place.resources ?? []),
+    selectResourcesByIds(state, character.resources ?? []),
   );
 };
 
-export const useCreatePlace = () => {
+export const useCreateCharacters = () => {
   const dispatch = useAppDispatch();
   return useCallback(
-    async (payload: NewPlace) => dispatch(PlacesCreateFetcher.action(payload)),
+    async (payload: NewCharacter) =>
+      dispatch(CharactersCreateFetcher.action(payload)),
     [dispatch],
   );
 };
 
-export const useDeletePlace = () => {
+export const useDeleteCharacters = () => {
   const dispatch = useAppDispatch();
   return useCallback(
     (id: number) => {
-      dispatch(PlacesDeleteFetcher.action(id));
+      dispatch(CharactersDeleteFetcher.action(id));
     },
     [dispatch],
   );
 };
 
-export const useFetchPlaces = () => {
+export const useFetchCharacters = () => {
   const dispatch = useAppDispatch();
-  const { loading } = usePlaces();
+  const { loading } = useCharacters();
   return useCallback(() => {
     if (!loading) {
-      dispatch(PlacesFetcher.action());
+      dispatch(CharactersFetcher.action());
     }
   }, [dispatch, loading]);
 };
 
-export const useUpdatePlace = () => {
+export const useUpdateCharacters = () => {
   const dispatch = useAppDispatch();
   return useCallback(
-    (payload: Place) => {
-      dispatch(PlacesUpdateFetcher.action(payload));
+    (payload: Character) => {
+      dispatch(CharactersUpdateFetcher.action(payload));
     },
     [dispatch],
   );

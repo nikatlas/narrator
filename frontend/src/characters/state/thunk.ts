@@ -1,45 +1,45 @@
 import Fetcher, { FetcherState } from "@/redux/fetcher";
 import NarratorAPI from "@/api/NarratorAPI";
-import { Place } from "@/places/types";
+import { Character } from "@/characters/types";
 import { Resource } from "@/resources/types";
 
 const api = new NarratorAPI();
 
-export const PlacesFetcher = new Fetcher("places/list", async () => {
-  return api.getPlaces();
+export const CharactersFetcher = new Fetcher("characters/list", async () => {
+  return api.getCharacters();
 });
 
-export const PlacesCreateFetcher = new Fetcher(
-  "places/create",
+export const CharactersCreateFetcher = new Fetcher(
+  "characters/create",
   async (values: any) => {
-    return api.createPlace(values);
+    return api.createCharacter(values);
   },
-  (data: any, state: FetcherState<Array<Place>>, action) => {
+  (data: any, state: FetcherState<Array<Character>>, action) => {
     return [...(state?.data ?? []), data];
   },
 );
 
-export const PlacesDeleteFetcher = new Fetcher(
-  "places/delete",
+export const CharactersDeleteFetcher = new Fetcher(
+  "characters/delete",
   async (id: number) => {
-    return api.deletePlace(id);
+    return api.deleteCharacter(id);
   },
-  (data: any, state: FetcherState<Array<Place>>, action) => {
-    return state.data?.filter((place) => {
-      return place.id !== action.payload;
+  (data: any, state: FetcherState<Array<Character>>, action) => {
+    return state.data?.filter((character) => {
+      return character.id !== action.payload;
     });
   },
 );
 
-export const PlacesUpdateFetcher = new Fetcher(
-  "places/update",
-  async (place: Place) => {
-    return api.updatePlace(place);
+export const CharactersUpdateFetcher = new Fetcher(
+  "characters/update",
+  async (character: Character) => {
+    return api.updateCharacter(character);
   },
-  (data: any, state: FetcherState<Array<Place>>, action) => {
+  (data: any, state: FetcherState<Array<Character>>, action) => {
     return [
-      ...(state.data?.filter((place) => {
-        return place.id !== action.payload.id;
+      ...(state.data?.filter((character) => {
+        return character.id !== action.payload.id;
       }) ?? []),
       data,
     ];

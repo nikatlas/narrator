@@ -7,13 +7,16 @@ import { Characters } from "@/characters";
 import "./router-object-augmentation";
 import { Campaigns } from "@/campaigns";
 import { store } from "@/redux/store";
+import { CharactersFetcher } from "@/characters/state/thunk";
 import { PlacesFetcher } from "@/places/state/thunk";
 import { ResourcesFetcher } from "@/resources/state/thunk";
 import { PlacesPage, ResourcesPage } from "@/pages";
 import PlacesDetailPage from "@/pages/placesDetails";
+import CharactersPage from "@/pages/characters";
 
 const dataLoader = () => {
   const promises = [
+    store.dispatch(CharactersFetcher.action()),
     store.dispatch(PlacesFetcher.action()),
     store.dispatch(ResourcesFetcher.action()),
   ];
@@ -36,7 +39,7 @@ export const narratorRouter = createBrowserRouter([
       {
         name: "Characters",
         path: "characters",
-        element: <Characters />,
+        element: <CharactersPage />,
       },
       {
         path: "places",

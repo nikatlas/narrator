@@ -16,6 +16,7 @@ import { useDeletePlace } from "@/places/state/hooks";
 import { Place } from "@/places/types";
 import { Link } from "react-router-dom";
 import EditPlaceModal from "./editPlaceModal";
+import EditIcon from "@mui/icons-material/Edit";
 
 interface PlacesProps {
   places: Place[];
@@ -56,8 +57,11 @@ const Places = ({ places, error }: PlacesProps) => {
                 <CardActions sx={{ justifyContent: "flex-end" }}>
                   <Button
                     size="small"
-                    startIcon={<GroupIcon />}
-                    onClick={() => setEditPlace(place)}
+                    startIcon={<EditIcon />}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setEditPlace(place);
+                    }}
                   >
                     Edit
                   </Button>
@@ -65,7 +69,10 @@ const Places = ({ places, error }: PlacesProps) => {
                     color={"error"}
                     size="small"
                     startIcon={<DeleteForeverIcon />}
-                    onClick={() => deletePlace(place.id)}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      deletePlace(place.id);
+                    }}
                   >
                     Delete
                   </Button>

@@ -1,6 +1,8 @@
 import HttpAPI from "./HttpAPI";
 import { NewPlace, Place } from "@/places/types";
 import { NewResource, Resource } from "@/resources/types";
+import place from "@/places/place";
+import { Character, NewCharacter } from "@/characters/types";
 
 class NarratorAPI extends HttpAPI {
   constructor() {
@@ -33,6 +35,17 @@ class NarratorAPI extends HttpAPI {
 
   getCharacters() {
     return this.get("character/");
+  }
+  createCharacter(newCharacter: NewCharacter): Promise<Character> {
+    return this.post("character/", newCharacter);
+  }
+
+  deleteCharacter(id: number): any {
+    return this.delete(`character/${id}/`);
+  }
+
+  updateCharacter(character: Character) {
+    return this.put(`character/${character.id}/`, character);
   }
 
   getInteractions(playerId: string, npcId: string) {

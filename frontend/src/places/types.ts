@@ -1,5 +1,3 @@
-import { Resource } from "@/resources/types";
-
 export interface Place {
   id: number;
   name: string;

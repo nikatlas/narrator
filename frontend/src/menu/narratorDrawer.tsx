@@ -243,7 +243,7 @@ export default function NarratorDrawer({ children }: { children: ReactNode }) {
           ))}
         </List>
       </Drawer>
-      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+      <Box component="main" sx={{ flexGrow: 1 }}>
         <DrawerHeader />
         {children}
       </Box>
