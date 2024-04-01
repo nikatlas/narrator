@@ -45,6 +45,8 @@ MIDDLEWARE = [
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
+    # CamelCaseJSONParser/Renderer Middleware
+    "djangorestframework_camel_case.middleware.CamelCaseMiddleWare",
 ]
 
 REST_FRAMEWORK = {
@@ -57,6 +59,17 @@ REST_FRAMEWORK = {
         "rest_framework.authentication.BasicAuthentication"
     ],
     "DEFAULT_FILTER_BACKENDS": ["django_filters.rest_framework.DjangoFilterBackend"],
+    "DEFAULT_PARSER_CLASSES": [
+        # CamelCaseJSONParser - If you use MultiPartFormParser or FormParser, we also
+        # have a camel case version
+        "djangorestframework_camel_case.parser.CamelCaseFormParser",
+        "djangorestframework_camel_case.parser.CamelCaseMultiPartParser",
+        "djangorestframework_camel_case.parser.CamelCaseJSONParser",
+    ],
+    "DEFAULT_RENDERER_CLASSES": [
+        "djangorestframework_camel_case.render.CamelCaseJSONRenderer",
+        "djangorestframework_camel_case.render.CamelCaseBrowsableAPIRenderer",
+    ],
 }
 
 STATIC_URL = env.str("DJANGO_STATIC_URL", "/static/")
