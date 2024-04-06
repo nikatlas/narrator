@@ -12,6 +12,7 @@ import Grid from "@mui/material/Grid";
 import { TextField } from "@mui/material";
 import React from "react";
 import { useFilteredResources } from "@/resources/state/hooks";
+import SearchableResources from "@/resources/searchableResources";
 
 const CharactersDetailPage = () => {
   const { characterId } = useParams();
@@ -19,13 +20,26 @@ const CharactersDetailPage = () => {
   const character = useCharacter(characterIdInt) as ICharacter;
   const [search, setSearch] = React.useState("");
   const characterResources = useCharactersResources(character, search);
-  const resources = useFilteredResources(undefined, search);
+  const resources = useFilteredResources(
+    undefined,
+    search,
+    characterResources.map((r) => r.id),
+  );
   const editCharacter = useUpdateCharacters();
 
   const handleUnlink = (id: number) => {
     editCharacter({
       ...character,
       resources: (character?.resources ?? []).filter((r) => r !== id),
+    });
+  };
+
+  const handleLink = (id: number) => {
+    editCharacter({
+      ...character,
+      resources: Array.from(
+        new Set([...(character?.resources ?? []), id]).values(),
+      ),
     });
   };
 
@@ -49,33 +63,22 @@ const CharactersDetailPage = () => {
         />
       </Bucket>
       <Bucket item xs={12} sm={8} md={9}>
-        <BucketContainer isVertical>
-          <Bucket mt={{ t: 2 }}>
-            <TextField
-              fullWidth
-              label={"Search"}
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-          </Bucket>
-          <Bucket>
-            <Resources
-              title={"Character resources"}
-              resources={characterResources}
-              error={null}
-              onUnlink={handleUnlink}
-              onNewResource={handleNewResource}
-            />
-          </Bucket>
-          <Bucket>
-            <Resources
-              title={"All resources"}
-              resources={resources}
-              error={null}
-              onUnlink={handleUnlink}
-            />
-          </Bucket>
-        </BucketContainer>
+        <SearchableResources
+          resourceSets={[
+            {
+              title: "Character Resources",
+              resources: characterResources,
+              onUnlink: handleUnlink,
+              onNewResource: handleNewResource,
+            },
+            {
+              title: "All resources",
+              resources: resources,
+              onLink: handleLink,
+            },
+          ]}
+          onSearch={setSearch}
+        />
       </Bucket>
     </BucketContainer>
   );

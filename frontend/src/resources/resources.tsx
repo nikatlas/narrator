@@ -13,6 +13,7 @@ import {
 import { useDeleteResource } from "@/resources/state/hooks";
 import NewResourceModal from "@/resources/newResourceModal";
 import LinkOffIcon from "@mui/icons-material/LinkOff";
+import LinkIcon from "@mui/icons-material/Link";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import GroupIcon from "@mui/icons-material/Group";
 import EditResourceModal from "./editResourceModal";
@@ -22,16 +23,20 @@ interface ResourcesProps {
   title?: string;
   resources: Resource[];
   error: any;
+  onLink?: (id: number) => void;
   onUnlink?: (id: number) => void;
   onNewResource?: (resource: Resource) => void;
+  withCreateButton?: boolean;
 }
 
 const Resources = ({
   title,
   resources,
   error,
+  onLink,
   onUnlink,
   onNewResource,
+  withCreateButton,
 }: ResourcesProps) => {
   const [search, setSearch] = React.useState("");
   const [editResource, setEditResource] = React.useState(null);
@@ -60,7 +65,9 @@ const Resources = ({
           </Grid>
         )}
         <Grid>
-          <NewResourceModal onNewResource={onNewResource} />
+          {withCreateButton && (
+            <NewResourceModal onNewResource={onNewResource} />
+          )}
           {editResource && (
             <EditResourceModal
               resource={editResource}
@@ -94,6 +101,15 @@ const Resources = ({
                     onClick={() => onUnlink(resource.id)}
                   >
                     Unlink
+                  </Button>
+                )}
+                {onLink && (
+                  <Button
+                    size="small"
+                    startIcon={<LinkIcon />}
+                    onClick={() => onLink(resource.id)}
+                  >
+                    Link
                   </Button>
                 )}
                 <Button

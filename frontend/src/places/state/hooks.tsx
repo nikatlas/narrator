@@ -30,9 +30,9 @@ export const usePlace = (placeId: number) => {
   return useAppSelector((state) => selectPlace(state, placeId));
 };
 
-export const usePlaceResources = (place: Place) => {
+export const usePlaceResources = (place: Place, search?: string) => {
   return useAppSelector((state) =>
-    selectResourcesByIds(state, place.resources ?? []),
+    selectResourcesByIds(state, place.resources ?? [], search),
   );
 };
 
