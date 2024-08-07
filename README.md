@@ -1,3 +1,12 @@
+Narrator brings AI characters and RPG campaings to life. 
+
+- Create NPC and Player characters with custom background and knowledge.
+- Discuss between one NPC and one Player character
+
+- Custom RAG system with Qdrant Vector Database and PostgreSQL
+- Abstract LLM interface with Langchain
+- Custom Pipeline library for running complex tasks
+
 ![Test coverage](./assets/images/coverage.svg)
 
 ## Run Django server
